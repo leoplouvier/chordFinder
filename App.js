@@ -4,24 +4,48 @@ import { Button, Input, Text } from "galio-framework";
 
 export default function App() {
   const [guitarStrings, selectCase] = useState([
-    { name: "E", value: "", key: 1 },
-    { name: "B", value: "", key: 2 },
-    { name: "G", value: "", key: 3 },
-    { name: "D", value: "", key: 4 },
-    { name: "A", value: "", key: 5 },
-    { name: "E", value: "", key: 6 },
-  ]);
-  const [chordResult, changeChord] = useState({});
-  const [selectedImage, changeSelectedImage] = useState(0);
+      { name: "E", value: "", key: 1 },
+      { name: "B", value: "", key: 2 },
+      { name: "G", value: "", key: 3 },
+      { name: "D", value: "", key: 4 },
+      { name: "A", value: "", key: 5 },
+      { name: "E", value: "", key: 6 },
+    ]),
+    [chordResult, changeChord] = useState({}),
+    [selectedImage, changeSelectedImage] = useState(0),
+    [disableFind, changeDisableFind] = useState(true),
+    images = [
+      require("./assets/guitarHead0.png"),
+      require("./assets/guitarHead1.png"),
+      require("./assets/guitarHead2.png"),
+      require("./assets/guitarHead3.png"),
+      require("./assets/guitarHead4.png"),
+      require("./assets/guitarHead5.png"),
+      require("./assets/guitarHead6.png"),
+    ];
 
-  const image0 = require("./assets/guitarHead0.png"),
-    image1 = require("./assets/guitarHead1.png"),
-    image2 = require("./assets/guitarHead2.png"),
-    image3 = require("./assets/guitarHead3.png"),
-    image4 = require("./assets/guitarHead4.png"),
-    image5 = require("./assets/guitarHead5.png"),
-    image6 = require("./assets/guitarHead6.png"),
-    images = [image0, image1, image2, image3, image4, image5, image6];
+  const findChord = async () => {
+    let chord = "",
+      stringsCopy = guitarStrings.slice().reverse();
+
+    stringsCopy.forEach((string) => {
+      chord += string.value ? string.value : "X";
+      string.key != 1 && (chord += "-");
+    });
+
+    let response = await fetch(
+        "https://api.uberchord.com/v1/chords?voicing=" + chord
+      ),
+      data = await response.json(),
+      chordStr = data[0].chordName.split(","),
+      chordObj = {
+        root: chordStr[0],
+        quality: chordStr[1],
+        tension: chordStr[2],
+        bass: chordStr[3],
+      };
+    changeChord(chordObj);
+  };
 
   return (
     <View style={styles.container}>
@@ -37,7 +61,6 @@ export default function App() {
           }
         />
       ))}
-
       {guitarStrings.map((string) => {
         let inputStyle = [styles.caseInput];
         string.key <= 3
@@ -49,7 +72,6 @@ export default function App() {
           inputStyle.push(styles.caseMid);
         (string.key === 1 || string.key === 6) &&
           inputStyle.push(styles.caseBottom);
-
         return (
           <Input
             style={inputStyle}
@@ -58,48 +80,36 @@ export default function App() {
             type="decimal-pad"
             placeholderTextColor="#9FA5AA"
             value={string.value}
-            onFocus={() => {
-              changeSelectedImage(string.key);
-            }}
+            onFocus={() => changeSelectedImage(string.key)}
             onChangeText={(text) => {
-              let valuesToReplace = guitarStrings.map((s) =>
-                s.key === string.key
-                  ? { name: s.name, value: text, key: s.key }
-                  : s
-              );
+              let allEmpty = !text,
+                valuesToReplace = guitarStrings.map((s) => {
+                  allEmpty &&
+                    s.key !== string.key &&
+                    s.value !== "" &&
+                    (allEmpty = false);
+                  return s.key === string.key
+                    ? { name: s.name, value: text, key: s.key }
+                    : s;
+                });
+              changeDisableFind(allEmpty);
               selectCase(valuesToReplace);
             }}
           />
         );
       })}
       <View style={styles.bottomActions}>
-        <Button
-          onPress={() => {
-            changeSelectedImage(0);
-            let chord = "";
-            let stringsCopy = guitarStrings.slice().reverse();
-            stringsCopy.forEach((string) => {
-              chord += string.value ? string.value : "X";
-              string.key != 1 && (chord += "-");
-            });
-            fetch("https://api.uberchord.com/v1/chords?voicing=" + chord)
-              .then((response) => response.json())
-              .then((data) => {
-                let chordStr = data[0].chordName.split(","),
-                  chordObj = {
-                    root: chordStr[0],
-                    quality: chordStr[1],
-                    tension: chordStr[2],
-                    bass: chordStr[3],
-                  };
-                changeChord(chordObj);
-              });
-          }}
-        >
-          find chord
-        </Button>
+        {disableFind ? (
+          <Button color={"#E2E4E5"} opacity={0.2} disabled>
+            find chord
+          </Button>
+        ) : (
+          <Button onPress={findChord} disabled={disableFind}>
+            find chord
+          </Button>
+        )}
         {chordResult ? (
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <View style={styles.chordContainer}>
             <Text h1>{chordResult.root}</Text>
             <Text h5 style={{ marginTop: 30 }}>
               {chordResult.quality}
@@ -148,4 +158,5 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       bottom: 0,
       alignItems: "center",
     },
+    chordContainer: { flexDirection: "row", alignItems: "center" },
   });
