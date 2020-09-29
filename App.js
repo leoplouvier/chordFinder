@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Image, Dimensions } from "react-native";
-import { Button, Input, Text } from "galio-framework";
+import { Button, Input, Text, Switch } from "galio-framework";
+
+const chordTranslation = {
+  eu: ["Do", "Ré", "Mi", "Fa", "Sol", "La", "Si"],
+  us: ["C", "D", "E", "F", "G", "A", "B"],
+};
 
 export default function App() {
   const [guitarStrings, selectCase] = useState([
@@ -14,6 +19,7 @@ export default function App() {
     [chordResult, changeChord] = useState({}),
     [selectedImage, changeSelectedImage] = useState(0),
     [disableFind, changeDisableFind] = useState(true),
+    [translationEU, changeTranslation] = useState(false),
     images = [
       require("./assets/guitarHead0.png"),
       require("./assets/guitarHead1.png"),
@@ -25,27 +31,45 @@ export default function App() {
     ];
 
   const findChord = async () => {
-    let chord = "",
-      stringsCopy = guitarStrings.slice().reverse();
+      let chord = "",
+        stringsCopy = guitarStrings.slice().reverse();
 
-    stringsCopy.forEach((string) => {
-      chord += string.value ? string.value : "X";
-      string.key != 1 && (chord += "-");
-    });
+      stringsCopy.forEach((string) => {
+        chord += string.value ? string.value : "X";
+        string.key != 1 && (chord += "-");
+      });
 
-    let response = await fetch(
-        "https://api.uberchord.com/v1/chords?voicing=" + chord
-      ),
-      data = await response.json(),
-      chordStr = data[0].chordName.split(","),
-      chordObj = {
-        root: chordStr[0],
-        quality: chordStr[1],
-        tension: chordStr[2],
-        bass: chordStr[3],
-      };
-    changeChord(chordObj);
-  };
+      try {
+        let response = await fetch(
+            "https://api.uberchord.com/v1/chords?voicing=" + chord
+          ),
+          data = await response.json(),
+          chordStr = data[0].chordName.split(","),
+          chordObj = {
+            root: translationEU
+              ? chordTranslation.eu[
+                  chordTranslation.us.findIndex((c) => c === chordStr[0])
+                ]
+              : chordStr[0],
+            quality: chordStr[1],
+            tension: chordStr[2],
+            bass: chordStr[3],
+          };
+        changeChord(chordObj);
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    translateChord = () => {
+      let isEu = !translationEU,
+        currentArray = isEu ? chordTranslation.us : chordTranslation.eu,
+        translationArray = isEu ? chordTranslation.eu : chordTranslation.us;
+      changeTranslation(isEu);
+      if (chordResult) {
+        let index = currentArray.findIndex((c) => c === chordResult.root);
+        changeChord({ ...chordResult, root: translationArray[index] });
+      }
+    };
 
   return (
     <View style={styles.container}>
@@ -98,6 +122,31 @@ export default function App() {
           />
         );
       })}
+      <View style={styles.translationContainer}>
+        <Text
+          style={
+            !translationEU
+              ? styles.activeTranslation
+              : styles.passiveTranslation
+          }
+        >
+          A,B,C,...
+        </Text>
+        <Switch
+          value={translationEU}
+          onChange={() => translateChord()}
+          style={{
+            transform: [{ scale: 1.5 }],
+          }}
+        />
+        <Text
+          style={
+            translationEU ? styles.activeTranslation : styles.passiveTranslation
+          }
+        >
+          Do,Ré,Mi,...
+        </Text>
+      </View>
       <View style={styles.bottomActions}>
         {disableFind ? (
           <Button color={"#E2E4E5"} opacity={0.2} disabled>
@@ -138,7 +187,7 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       width: "50%",
       height: (40 / 100) * screenHeight,
       position: "absolute",
-      top: 100,
+      top: 120,
     },
     caseInput: {
       width: "25%",
@@ -150,13 +199,32 @@ const screenHeight = Math.round(Dimensions.get("window").height),
     caseLeft: {
       left: "-47%",
     },
-    caseTop: { top: 100 },
-    caseMid: { top: 200 },
-    caseBottom: { top: 300 },
+    caseTop: { top: 120 },
+    caseMid: { top: 220 },
+    caseBottom: { top: 320 },
     bottomActions: {
       position: "absolute",
       bottom: 0,
       alignItems: "center",
     },
     chordContainer: { flexDirection: "row", alignItems: "center" },
+    translationContainer: {
+      position: "absolute",
+      top: 60,
+      left: 20,
+      width: "100%",
+      flexDirection: "row",
+      justifyContent: "flex-start",
+      alignItems: "center",
+    },
+    activeTranslation: {
+      color: "#000",
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
+    passiveTranslation: {
+      color: "#9FA5AA",
+      paddingLeft: 10,
+      paddingRight: 10,
+    },
   });
