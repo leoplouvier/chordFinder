@@ -85,13 +85,32 @@ export default function App() {
             fetch("https://api.uberchord.com/v1/chords?voicing=" + chord)
               .then((response) => response.json())
               .then((data) => {
-                changeChord(data[0]);
+                let chordStr = data[0].chordName.split(","),
+                  chordObj = {
+                    root: chordStr[0],
+                    quality: chordStr[1],
+                    tension: chordStr[2],
+                    bass: chordStr[3],
+                  };
+                changeChord(chordObj);
               });
           }}
         >
           find chord
         </Button>
-        <Text h1>{chordResult ? chordResult.chordName : ""}</Text>
+        {chordResult ? (
+          <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <Text h1>{chordResult.root}</Text>
+            <Text h5 style={{ marginTop: 30 }}>
+              {chordResult.quality}
+            </Text>
+            <Text h4 style={{ marginBottom: 10 }}>
+              {chordResult.tension}
+            </Text>
+          </View>
+        ) : (
+          ""
+        )}
       </View>
     </View>
   );
