@@ -1,277 +1,55 @@
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  Dimensions,
-  TextInput,
-  Switch,
-} from "react-native";
-import { Button, Text } from "galio-framework";
+import React from "react";
+import { View, StyleSheet } from "react-native";
+import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import ChordFinder from "./Screens/ChordFinderScreen";
+import ChordPosition from "./Screens/ChordPositionScreen";
+import { Icon, Text } from "galio-framework";
 
-const chordTranslation = {
-  eu: ["Do", "Ré", "Mi", "Fa", "Sol", "La", "Si"],
-  us: ["C", "D", "E", "F", "G", "A", "B"],
-};
+const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [guitarStrings, selectCase] = useState([
-      { name: "E", value: "", key: 1 },
-      { name: "B", value: "", key: 2 },
-      { name: "G", value: "", key: 3 },
-      { name: "D", value: "", key: 4 },
-      { name: "A", value: "", key: 5 },
-      { name: "E", value: "", key: 6 },
-    ]),
-    [chordResult, changeChord] = useState({}),
-    [selectedImage, changeSelectedImage] = useState(0),
-    [disableFind, changeDisableFind] = useState(true),
-    [translationEU, changeTranslation] = useState(false),
-    images = [
-      require("./assets/guitarHead0.png"),
-      require("./assets/guitarHead1.png"),
-      require("./assets/guitarHead2.png"),
-      require("./assets/guitarHead3.png"),
-      require("./assets/guitarHead4.png"),
-      require("./assets/guitarHead5.png"),
-      require("./assets/guitarHead6.png"),
-    ];
-
-  const findChord = async () => {
-      let chord = "",
-        stringsCopy = guitarStrings.slice().reverse();
-
-      stringsCopy.forEach((string) => {
-        chord += string.value ? string.value : "X";
-        string.key != 1 && (chord += "-");
-      });
-
-      try {
-        let response = await fetch(
-            "https://api.uberchord.com/v1/chords?voicing=" + chord
-          ),
-          data = await response.json(),
-          chordStr = data[0].chordName.split(","),
-          chordObj = {
-            root: translationEU
-              ? chordTranslation.eu[
-                  chordTranslation.us.findIndex((c) => c === chordStr[0])
-                ]
-              : chordStr[0],
-            quality: chordStr[1],
-            tension: chordStr[2],
-            bass: chordStr[3],
-          };
-        changeChord(chordObj);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    translateChord = () => {
-      let isEu = !translationEU,
-        currentArray = isEu ? chordTranslation.us : chordTranslation.eu,
-        translationArray = isEu ? chordTranslation.eu : chordTranslation.us;
-      changeTranslation(isEu);
-      if (chordResult) {
-        let index = currentArray.findIndex((c) => c === chordResult.root);
-        changeChord({ ...chordResult, root: translationArray[index] });
-      }
-    },
-    clearAll = () => {
-      let initArray = guitarStrings.map((string) => {
-        return { ...string, value: "" };
-      });
-      selectCase(initArray);
-      changeDisableFind(true);
-    };
-
   return (
-    <View style={styles.container}>
-      {images.map((image, i) => (
-        <Image
-          key={i}
-          style={styles.background}
-          source={image}
-          style={
-            selectedImage === i
-              ? styles.background
-              : { ...styles.background, opacity: 0 }
-          }
-        />
-      ))}
-      {guitarStrings.map((string) => {
-        let inputStyle = [styles.caseInput];
-        string.key <= 3
-          ? inputStyle.push(styles.caseRight)
-          : inputStyle.push(styles.caseLeft);
-        (string.key === 3 || string.key === 4) &&
-          inputStyle.push(styles.caseTop);
-        (string.key === 2 || string.key === 5) &&
-          inputStyle.push(styles.caseMid);
-        (string.key === 1 || string.key === 6) &&
-          inputStyle.push(styles.caseBottom);
-        return (
-          <TextInput
-            style={inputStyle}
-            key={string.key}
-            placeholder={
-              translationEU
-                ? chordTranslation.eu[
-                    chordTranslation.us.findIndex((s) => s === string.name)
-                  ]
-                : string.name
+    <NavigationContainer>
+      <View style={styles.header}>
+        <Text h5>Chord Finder</Text>
+      </View>
+      <Tab.Navigator
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
+            let iconName;
+            if (route.name === "Home") {
+              iconName = "search1";
+            } else if (route.name === "ChordPosition") {
+              iconName = "book";
             }
-            keyboardType="decimal-pad"
-            placeholderTextColor="#9FA5AA"
-            value={string.value}
-            onFocus={() => changeSelectedImage(string.key)}
-            onChangeText={(text) => {
-              let numText = Number(text);
-              if ((text && !numText && numText !== 0) || numText > 26) {
-                return;
-              }
-              let allEmpty = !text,
-                valuesToReplace = guitarStrings.map((s) => {
-                  allEmpty &&
-                    s.key !== string.key &&
-                    s.value !== "" &&
-                    (allEmpty = false);
-                  return s.key === string.key
-                    ? { name: s.name, value: text, key: s.key }
-                    : s;
-                });
-              changeDisableFind(allEmpty);
-              selectCase(valuesToReplace);
-            }}
-          />
-        );
-      })}
-      <Button
-        onPress={clearAll}
-        style={styles.clearButton}
-        round
-        color="#eb5454"
+            return <Icon name={iconName} family="antdesign" color={color} />;
+          },
+        })}
       >
-        Clear
-      </Button>
-      <View style={styles.translationContainer}>
-        <Text
-          style={
-            !translationEU
-              ? styles.activeTranslation
-              : styles.passiveTranslation
-          }
-        >
-          A,B,C,...
-        </Text>
-        <Switch
-          style={styles.translationSwitch}
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor="#f4f3f4"
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={translateChord}
-          value={translationEU}
+        <Tab.Screen
+          name="Home"
+          options={{ title: "Chord Finder" }}
+          component={ChordFinder}
         />
-        <Text
-          style={
-            translationEU ? styles.activeTranslation : styles.passiveTranslation
-          }
-        >
-          Do,Ré,Mi,...
-        </Text>
-      </View>
-      <View style={styles.bottomActions}>
-        {disableFind ? (
-          <Button color="#E2E4E5" opacity={0.2} disabled>
-            find chord
-          </Button>
-        ) : (
-          <Button color="#81b0ff" onPress={findChord} disabled={disableFind}>
-            find chord
-          </Button>
-        )}
-        {chordResult ? (
-          <View style={styles.chordContainer}>
-            <Text h1>{chordResult.root}</Text>
-            <Text h5 style={{ marginTop: 30 }}>
-              {chordResult.quality}
-            </Text>
-            <Text h4 style={{ marginBottom: 10 }}>
-              {chordResult.tension}
-            </Text>
-          </View>
-        ) : (
-          ""
-        )}
-      </View>
-    </View>
+        <Tab.Screen
+          name="ChordPosition"
+          options={{ title: "Chord Dictionnary" }}
+          component={ChordPosition}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
 
-const screenHeight = Math.round(Dimensions.get("window").height),
-  styles = StyleSheet.create({
-    container: {
-      width: "100%",
-      height: "100%",
-      backgroundColor: "#fff",
-      alignItems: "center",
-    },
-    background: {
-      width: "50%",
-      height: (40 / 100) * screenHeight,
-      position: "absolute",
-      top: 120,
-    },
-    caseInput: {
-      width: "22%",
-      position: "absolute",
-      height: 40,
-      borderColor: "gray",
-      borderWidth: 1,
-      borderRadius: 5,
-      paddingLeft: 10,
-    },
-    caseRight: {
-      right: 10,
-    },
-    caseLeft: {
-      left: 10,
-    },
-    caseTop: { top: 150 },
-    caseMid: { top: 240 },
-    caseBottom: { top: 330 },
-    bottomActions: {
-      position: "absolute",
-      bottom: 0,
-      alignItems: "center",
-    },
-    chordContainer: { flexDirection: "row", alignItems: "center" },
-    translationContainer: {
-      position: "absolute",
-      top: 60,
-      left: 20,
-      width: "100%",
-      flexDirection: "row",
-      justifyContent: "flex-start",
-      alignItems: "center",
-    },
-    translationSwitch: {
-      transform: [{ scale: 1.5 }],
-    },
-    activeTranslation: {
-      color: "#000",
-      paddingLeft: 10,
-      paddingRight: 10,
-    },
-    passiveTranslation: {
-      color: "#9FA5AA",
-      paddingLeft: 10,
-      paddingRight: 10,
-    },
-    clearButton: {
-      position: "absolute",
-      top: 400,
-      right: 20,
-      width: 60,
-    },
-  });
+const styles = StyleSheet.create({
+  header: {
+    width: "100%",
+    height: 80,
+    borderBottomColor: "#D8DBDD",
+    borderBottomWidth: 1,
+    paddingLeft: 20,
+    paddingTop: 20,
+    justifyContent: "center",
+  },
+});
