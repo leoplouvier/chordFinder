@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Image, Dimensions } from "react-native";
-import { Button, Input, Text, Switch } from "galio-framework";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Dimensions,
+  TextInput,
+  Switch,
+} from "react-native";
+import { Button, Text } from "galio-framework";
 
 const chordTranslation = {
   eu: ["Do", "Ré", "Mi", "Fa", "Sol", "La", "Si"],
@@ -69,6 +76,13 @@ export default function App() {
         let index = currentArray.findIndex((c) => c === chordResult.root);
         changeChord({ ...chordResult, root: translationArray[index] });
       }
+    },
+    clearAll = () => {
+      let initArray = guitarStrings.map((string) => {
+        return { ...string, value: "" };
+      });
+      selectCase(initArray);
+      changeDisableFind(true);
     };
 
   return (
@@ -97,15 +111,25 @@ export default function App() {
         (string.key === 1 || string.key === 6) &&
           inputStyle.push(styles.caseBottom);
         return (
-          <Input
+          <TextInput
             style={inputStyle}
             key={string.key}
-            placeholder={string.name + " string"}
-            type="decimal-pad"
+            placeholder={
+              translationEU
+                ? chordTranslation.eu[
+                    chordTranslation.us.findIndex((s) => s === string.name)
+                  ]
+                : string.name
+            }
+            keyboardType="decimal-pad"
             placeholderTextColor="#9FA5AA"
             value={string.value}
             onFocus={() => changeSelectedImage(string.key)}
             onChangeText={(text) => {
+              let numText = Number(text);
+              if ((text && !numText && numText !== 0) || numText > 26) {
+                return;
+              }
               let allEmpty = !text,
                 valuesToReplace = guitarStrings.map((s) => {
                   allEmpty &&
@@ -122,6 +146,14 @@ export default function App() {
           />
         );
       })}
+      <Button
+        onPress={clearAll}
+        style={styles.clearButton}
+        round
+        color="#eb5454"
+      >
+        Clear
+      </Button>
       <View style={styles.translationContainer}>
         <Text
           style={
@@ -133,11 +165,12 @@ export default function App() {
           A,B,C,...
         </Text>
         <Switch
+          style={styles.translationSwitch}
+          trackColor={{ false: "#767577", true: "#81b0ff" }}
+          thumbColor="#f4f3f4"
+          ios_backgroundColor="#3e3e3e"
+          onValueChange={translateChord}
           value={translationEU}
-          onChange={() => translateChord()}
-          style={{
-            transform: [{ scale: 1.5 }],
-          }}
         />
         <Text
           style={
@@ -149,11 +182,11 @@ export default function App() {
       </View>
       <View style={styles.bottomActions}>
         {disableFind ? (
-          <Button color={"#E2E4E5"} opacity={0.2} disabled>
+          <Button color="#E2E4E5" opacity={0.2} disabled>
             find chord
           </Button>
         ) : (
-          <Button onPress={findChord} disabled={disableFind}>
+          <Button color="#81b0ff" onPress={findChord} disabled={disableFind}>
             find chord
           </Button>
         )}
@@ -190,18 +223,23 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       top: 120,
     },
     caseInput: {
-      width: "25%",
+      width: "22%",
       position: "absolute",
+      height: 40,
+      borderColor: "gray",
+      borderWidth: 1,
+      borderRadius: 5,
+      paddingLeft: 10,
     },
     caseRight: {
-      right: "-47%",
+      right: 10,
     },
     caseLeft: {
-      left: "-47%",
+      left: 10,
     },
-    caseTop: { top: 120 },
-    caseMid: { top: 220 },
-    caseBottom: { top: 320 },
+    caseTop: { top: 150 },
+    caseMid: { top: 240 },
+    caseBottom: { top: 330 },
     bottomActions: {
       position: "absolute",
       bottom: 0,
@@ -217,6 +255,9 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       justifyContent: "flex-start",
       alignItems: "center",
     },
+    translationSwitch: {
+      transform: [{ scale: 1.5 }],
+    },
     activeTranslation: {
       color: "#000",
       paddingLeft: 10,
@@ -226,5 +267,11 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       color: "#9FA5AA",
       paddingLeft: 10,
       paddingRight: 10,
+    },
+    clearButton: {
+      position: "absolute",
+      top: 400,
+      right: 20,
+      width: 60,
     },
   });
