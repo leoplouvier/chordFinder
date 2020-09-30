@@ -8,8 +8,8 @@ import {
   Switch,
 } from "react-native";
 import { Button, Text } from "galio-framework";
-import { chordTranslation } from "../utils";
-
+import { chordTranslation, theme } from "../utils";
+import ChordText from "../components/ChordText";
 
 export default function ChordFinder() {
   const [guitarStrings, selectCase] = useState([
@@ -147,7 +147,7 @@ export default function ChordFinder() {
         onPress={clearAll}
         style={styles.clearButton}
         round
-        color="#eb5454"
+        color={theme.color.danger}
       >
         Clear
       </Button>
@@ -163,8 +163,11 @@ export default function ChordFinder() {
         </Text>
         <Switch
           style={styles.translationSwitch}
-          trackColor={{ false: "#767577", true: "#81b0ff" }}
-          thumbColor="#f4f3f4"
+          trackColor={{
+            false: theme.color.inactive,
+            true: theme.color.primary,
+          }}
+          thumbColor={theme.color.white}
           ios_backgroundColor="#3e3e3e"
           onValueChange={translateChord}
           value={translationEU}
@@ -179,24 +182,24 @@ export default function ChordFinder() {
       </View>
       <View style={styles.bottomActions}>
         {disableFind ? (
-          <Button color="#E2E4E5" opacity={0.2} disabled>
+          <Button color={theme.color.disabled} opacity={0.2} disabled>
             find chord
           </Button>
         ) : (
-          <Button color="#81b0ff" onPress={findChord} disabled={disableFind}>
+          <Button
+            color={theme.color.primary}
+            onPress={findChord}
+            disabled={disableFind}
+          >
             find chord
           </Button>
         )}
         {chordResult ? (
-          <View style={styles.chordContainer}>
-            <Text h1>{chordResult.root}</Text>
-            <Text h5 style={{ marginTop: 30 }}>
-              {chordResult.quality}
-            </Text>
-            <Text h4 style={{ marginBottom: 10 }}>
-              {chordResult.tension}
-            </Text>
-          </View>
+          <ChordText
+            root={chordResult.root}
+            quality={chordResult.quality}
+            tension={chordResult.tension}
+          />
         ) : (
           ""
         )}
@@ -242,7 +245,6 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       bottom: 0,
       alignItems: "center",
     },
-    chordContainer: { flexDirection: "row", alignItems: "center" },
     translationContainer: {
       position: "absolute",
       top: 30,
