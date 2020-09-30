@@ -21,7 +21,7 @@ export default function ChordPosition() {
           marginTop: 10,
         }}
       >
-        {chordTranslation.us.sort().map((chord, i) => {
+        {[...chordTranslation.us].sort().map((chord, i) => {
           return (
             <SelectableButton
               key={i}
