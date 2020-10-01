@@ -1,9 +1,10 @@
 import React, { useState } from "react";
-import { View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { chordTranslation, theme } from "../utils";
 import { Button, Text } from "galio-framework";
 import ChordText from "../components/ChordText";
 import PlaySchema from "../components/PlaySchema";
+import Swiper from "react-native-swiper";
 
 const quality = ["maj", "m"];
 
@@ -37,8 +38,8 @@ export default function ChordPosition() {
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
-          marginTop: 50,
-          marginBottom: 50,
+          marginTop: 30,
+          marginBottom: 30,
         }}
       >
         {quality.map((q) => {
@@ -85,19 +86,35 @@ export default function ChordPosition() {
       >
         How to play
       </Button>
-      {chordResult.length > 0 &&
-        chordResult.map((c, index) => {
-          return (
-            <View style={{ alignItems: "center" }} key={index}>
-              <ChordText
-                root={c.chord.root}
-                quality={c.chord.quality}
-                tension={c.chord.tension}
-              />
-              <PlaySchema chord={c.strings} />
-            </View>
-          );
-        })}
+      {chordResult.length > 0 && (
+        <Swiper
+          containerStyle={{
+            width: "100%",
+            height: 360,
+            position: "absolute",
+            top: "100%",
+          }}
+        >
+          {chordResult.map((c, index) => {
+            return (
+              <View
+                style={{
+                  alignItems: "center",
+                  flex: 1,
+                }}
+                key={index}
+              >
+                <ChordText
+                  root={c.chord.root}
+                  quality={c.chord.quality}
+                  tension={c.chord.tension}
+                />
+                <PlaySchema chord={c.strings} />
+              </View>
+            );
+          })}
+        </Swiper>
+      )}
     </View>
   );
 }

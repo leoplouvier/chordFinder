@@ -1,15 +1,18 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text } from "galio-framework";
+import { guitarStrings } from "../utils";
 
 export default function PlaySchema(props) {
   let chordArray = props.chord.split(" ").reverse(),
     beginning = 28;
   let positionArray = [];
   chordArray.forEach((pos) => {
-    pos !== "X" && Number(pos) < beginning && (beginning = Number(pos));
+    pos !== "X" &&
+      Number(pos) < beginning &&
+      Number(pos) !== 0 &&
+      (beginning = Number(pos));
   });
-  beginning == 0 && (beginning = 1);
   for (let i = 0; i < 6; i++) {
     let caseArray = [".", ".", ".", ".", "."];
     if (chordArray[i] !== "X") {
@@ -80,9 +83,18 @@ export default function PlaySchema(props) {
           </View>
         );
       })}
-      <Text h3 style={{ position: "absolute", bottom: -20, left: 15 }}>
-        {beginning}
-      </Text>
+      <View style={styles.beginning}>
+        <Text h4>{beginning}</Text>
+      </View>
+      <View style={styles.stringNames}>
+        {guitarStrings.map((string, i) => {
+          return (
+            <Text key={i} muted style={{ marginBottom: 20 }}>
+              {string}
+            </Text>
+          );
+        })}
+      </View>
     </View>
   );
 }
@@ -113,5 +125,19 @@ const styles = StyleSheet.create({
     backgroundColor: "#000",
     marginLeft: -40,
     marginTop: -12,
+  },
+  beginning: {
+    position: "absolute",
+    bottom: -5,
+    left: 0,
+    width: 65,
+    alignItems: "center",
+  },
+  stringNames: {
+    position: "absolute",
+    top: -10,
+    right: -60,
+    width: 100,
+    height: "100%",
   },
 });
