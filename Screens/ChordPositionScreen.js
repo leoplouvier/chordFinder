@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { chordTranslation, theme } from "../utils";
 import { Button, Text } from "galio-framework";
 import ChordText from "../components/ChordText";
+import PlaySchema from "../components/PlaySchema";
 
 const quality = ["maj", "m"];
 
@@ -93,7 +94,7 @@ export default function ChordPosition() {
                 quality={c.chord.quality}
                 tension={c.chord.tension}
               />
-              <Text h4>{c.strings}</Text>
+              <PlaySchema chord={c.strings} />
             </View>
           );
         })}
