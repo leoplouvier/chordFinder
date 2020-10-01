@@ -16,7 +16,9 @@ export default function PlaySchema(props) {
   for (let i = 0; i < 6; i++) {
     let caseArray = [".", ".", ".", ".", "."];
     if (chordArray[i] !== "X") {
-      caseArray[Number(chordArray[i]) + 1 - beginning] = chordArray[i];
+      chordArray[i] == 0
+        ? (caseArray[0] = 0)
+        : (caseArray[Number(chordArray[i]) + 1 - beginning] = chordArray[i]);
     } else {
       caseArray[0] = "X";
     }
