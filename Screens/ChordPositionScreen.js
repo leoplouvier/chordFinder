@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { chordTranslation, theme } from "../utils";
 import { Button, Text } from "galio-framework";
@@ -13,6 +13,7 @@ export default function ChordPosition() {
   const [selectedQuality, changeQuality] = useState("maj");
   const [chordResult, changeResult] = useState([]);
   const [isLoading, changeLoading] = useState(false);
+  const swiperEl = useRef(null);
 
   return (
     <View>
@@ -77,9 +78,11 @@ export default function ChordPosition() {
                 },
               };
             });
+            swiperEl.current && swiperEl.current.scrollTo(1);
             changeResult(formatedData);
             changeLoading(false);
           } catch (error) {
+            changeLoading(false);
             console.log(error);
           }
         }}
@@ -94,6 +97,7 @@ export default function ChordPosition() {
             position: "absolute",
             top: "100%",
           }}
+          ref={swiperEl}
         >
           {chordResult.map((c, index) => {
             return (
