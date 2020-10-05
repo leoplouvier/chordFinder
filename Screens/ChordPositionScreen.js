@@ -6,13 +6,17 @@ import ChordText from "../components/ChordText";
 import PlaySchema from "../components/PlaySchema";
 import Swiper from "react-native-swiper";
 
-const quality = ["maj", "m"];
+const quality = ["maj", "m"],
+  alteration = ["b", "", "#"];
 
 export default function ChordPosition() {
   const [selectedChord, changeChord] = useState("");
   const [selectedQuality, changeQuality] = useState("maj");
+  const [selectedAlteration, changeAlteration] = useState("");
   const [chordResult, changeResult] = useState([]);
   const [isLoading, changeLoading] = useState(false);
+  const [cantBeSharp, disableSharp] = useState(false);
+  const [cantBeFlat, disableFlat] = useState(false);
   const swiperEl = useRef(null);
 
   return (
@@ -30,7 +34,12 @@ export default function ChordPosition() {
               key={i}
               isSelected={!selectedChord || selectedChord === chord}
               textString={chord}
-              onPress={() => changeChord(chord)}
+              onPress={() => {
+                changeChord(chord);
+                disableSharp(["E", "B"].includes(chord) ? true : false);
+                disableFlat(["F", "C"].includes(chord) ? true : false);
+                changeAlteration("");
+              }}
             />
           );
         })}
@@ -39,8 +48,31 @@ export default function ChordPosition() {
         style={{
           flexDirection: "row",
           flexWrap: "wrap",
-          marginTop: 30,
-          marginBottom: 30,
+          marginTop: 15,
+          marginBottom: 15,
+          width: "100%",
+        }}
+      >
+        {alteration.map((a) => {
+          return (
+            <SelectableButton
+              width={40}
+              key={a}
+              isSelected={selectedAlteration === a}
+              textString={!a ? "--" : a}
+              onPress={() => changeAlteration(a)}
+              disabled={
+                a === "#" ? cantBeSharp : a === "b" ? cantBeFlat : false
+              }
+            />
+          );
+        })}
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          flexWrap: "wrap",
+          marginBottom: 15,
         }}
       >
         {quality.map((q) => {
@@ -60,6 +92,11 @@ export default function ChordPosition() {
         loading={isLoading}
         onPress={async () => {
           let chord = selectedChord;
+          selectedAlteration &&
+            (chord +=
+              selectedAlteration && selectedAlteration === "#"
+                ? "%23"
+                : selectedAlteration);
           selectedQuality && (chord += "_" + selectedQuality);
           changeLoading(true);
           try {
@@ -127,14 +164,26 @@ const SelectableButton = (props) => {
   return (
     <Button
       style={{
-        width: 80,
+        width: props.width || 60,
+        height: props.height || 40,
       }}
-      color={props.isSelected ? theme.color.primary : "#fff"}
+      color={
+        props.isSelected
+          ? theme.color.primary
+          : props.disabled
+          ? theme.color.disabled
+          : "#fff"
+      }
       onPress={props.onPress}
+      disabled={props.disabled}
     >
       <Text
         style={{
-          color: props.isSelected ? "#fff" : theme.color.primary,
+          color: props.isSelected
+            ? "#fff"
+            : props.disabled
+            ? theme.color.inactive
+            : theme.color.primary,
         }}
       >
         {props.textString}
