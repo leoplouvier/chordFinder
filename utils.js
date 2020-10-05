@@ -3,6 +3,8 @@ export const chordTranslation = {
   us: ["C", "D", "E", "F", "G", "A", "B"],
 };
 export const guitarStrings = ["E", "B", "G", "D", "A", "E"];
+export const quality = ["maj", "m"];
+export const alteration = ["b", "", "#"];
 export const theme = {
   color: {
     primary: "#81b0ff",
