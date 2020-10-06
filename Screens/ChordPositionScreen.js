@@ -6,8 +6,12 @@ import ChordText from "../components/ChordText";
 import PlaySchema from "../components/PlaySchema";
 import Swiper from "react-native-swiper";
 import SelectableButton from "../components/SelectableButton";
+import {
+  getChordCurrentTranslation,
+  withTranslation,
+} from "../translationStore";
 
-export default function ChordPosition() {
+const ChordPosition = (props) => {
   const [selectedChord, changeChord] = useState(""),
     [selectedQuality, changeQuality] = useState("maj"),
     [selectedAlteration, changeAlteration] = useState(""),
@@ -17,7 +21,7 @@ export default function ChordPosition() {
     [cantBeFlat, disableFlat] = useState(false),
     swiperEl = useRef(null),
     searchForChords = async () => {
-      let chord = selectedChord;
+      let chord = chordTranslation.us[selectedChord];
       selectedAlteration &&
         (chord +=
           selectedAlteration && selectedAlteration === "#"
@@ -49,18 +53,29 @@ export default function ChordPosition() {
         console.log(error);
       }
     };
+  let chordArray =
+    props.state.translation === "us"
+      ? [...props.state.translationArray].sort()
+      : props.state.translationArray;
 
   return (
     <View>
       <View style={styles.ButtonContainer}>
-        {[...chordTranslation.us].sort().map((chord, i) => {
+        {chordArray.map((chord, i) => {
           return (
             <SelectableButton
               key={i}
-              isSelected={!selectedChord || selectedChord === chord}
+              isSelected={
+                !selectedChord ||
+                selectedChord ===
+                  props.state.translationArray.findIndex((c) => c === chord)
+              }
               textString={chord}
               onPress={() => {
-                changeChord(chord);
+                let chordValue = props.state.translationArray.findIndex(
+                  (c) => c === chord
+                );
+                changeChord(chordValue);
                 disableSharp(["E", "B"].includes(chord) ? true : false);
                 disableFlat(["F", "C"].includes(chord) ? true : false);
                 changeAlteration("");
@@ -112,7 +127,7 @@ export default function ChordPosition() {
             return (
               <View style={styles.swiperViewContainer} key={index}>
                 <ChordText
-                  root={c.chord.root}
+                  root={getChordCurrentTranslation(c.chord.root)}
                   quality={c.chord.quality}
                   tension={c.chord.tension}
                 />
@@ -124,7 +139,9 @@ export default function ChordPosition() {
       )}
     </View>
   );
-}
+};
+
+export default withTranslation(ChordPosition);
 
 const styles = StyleSheet.create({
   ButtonContainer: { flexDirection: "row", flexWrap: "wrap", marginTop: 15 },

@@ -1,29 +1,22 @@
 import React, { useState } from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  Dimensions,
-  TextInput,
-  Switch,
-} from "react-native";
-import { Button, Text } from "galio-framework";
+import { StyleSheet, View, Image, Dimensions, TextInput } from "react-native";
+import { Button } from "galio-framework";
 import { chordTranslation, theme } from "../utils";
 import ChordText from "../components/ChordText";
+import { withTranslation } from "../translationStore";
 
-export default function ChordFinder() {
+const ChordFinder = (props) => {
   const [guitarStrings, selectCase] = useState([
-      { name: "E", value: "", key: 1 },
-      { name: "B", value: "", key: 2 },
-      { name: "G", value: "", key: 3 },
-      { name: "D", value: "", key: 4 },
-      { name: "A", value: "", key: 5 },
-      { name: "E", value: "", key: 6 },
+      { nameIndex: 2, value: "", key: 1 },
+      { nameIndex: 6, value: "", key: 2 },
+      { nameIndex: 4, value: "", key: 3 },
+      { nameIndex: 1, value: "", key: 4 },
+      { nameIndex: 5, value: "", key: 5 },
+      { nameIndex: 2, value: "", key: 6 },
     ]),
     [chordResult, changeChord] = useState({}),
     [selectedImage, changeSelectedImage] = useState(0),
     [disableFind, changeDisableFind] = useState(true),
-    [translationEU, changeTranslation] = useState(false),
     images = [
       require(".././assets/guitarHead0.png"),
       require(".././assets/guitarHead1.png"),
@@ -50,11 +43,8 @@ export default function ChordFinder() {
           data = await response.json(),
           chordStr = data[0].chordName.split(","),
           chordObj = {
-            root: translationEU
-              ? chordTranslation.eu[
-                  chordTranslation.us.findIndex((c) => c === chordStr[0])
-                ]
-              : chordStr[0],
+            root: chordStr[0],
+            rootIndex: chordTranslation.us.findIndex((c) => c === chordStr[0]),
             quality: chordStr[1],
             tension: chordStr[2],
             bass: chordStr[3],
@@ -62,16 +52,6 @@ export default function ChordFinder() {
         changeChord(chordObj);
       } catch (error) {
         console.log(error);
-      }
-    },
-    translateChord = () => {
-      let isEu = !translationEU,
-        currentArray = isEu ? chordTranslation.us : chordTranslation.eu,
-        translationArray = isEu ? chordTranslation.eu : chordTranslation.us;
-      changeTranslation(isEu);
-      if (chordResult) {
-        let index = currentArray.findIndex((c) => c === chordResult.root);
-        changeChord({ ...chordResult, root: translationArray[index] });
       }
     },
     clearAll = () => {
@@ -111,13 +91,7 @@ export default function ChordFinder() {
           <TextInput
             style={inputStyle}
             key={string.key}
-            placeholder={
-              translationEU
-                ? chordTranslation.eu[
-                    chordTranslation.us.findIndex((s) => s === string.name)
-                  ]
-                : string.name
-            }
+            placeholder={props.state.translationArray[string.nameIndex]}
             keyboardType="decimal-pad"
             placeholderTextColor="#9FA5AA"
             value={string.value}
@@ -151,35 +125,6 @@ export default function ChordFinder() {
       >
         Clear
       </Button>
-      <View style={styles.translationContainer}>
-        <Text
-          style={
-            !translationEU
-              ? styles.activeTranslation
-              : styles.passiveTranslation
-          }
-        >
-          A,B,C,...
-        </Text>
-        <Switch
-          style={styles.translationSwitch}
-          trackColor={{
-            false: theme.color.inactive,
-            true: theme.color.primary,
-          }}
-          thumbColor={theme.color.white}
-          ios_backgroundColor="#3e3e3e"
-          onValueChange={translateChord}
-          value={translationEU}
-        />
-        <Text
-          style={
-            translationEU ? styles.activeTranslation : styles.passiveTranslation
-          }
-        >
-          Do,Ré,Mi,...
-        </Text>
-      </View>
       <View style={styles.bottomActions}>
         {disableFind ? (
           <Button color={theme.color.disabled} opacity={0.2} disabled>
@@ -196,7 +141,7 @@ export default function ChordFinder() {
         )}
         {chordResult ? (
           <ChordText
-            root={chordResult.root}
+            root={props.state.translationArray[chordResult.rootIndex]}
             quality={chordResult.quality}
             tension={chordResult.tension}
           />
@@ -206,7 +151,8 @@ export default function ChordFinder() {
       </View>
     </View>
   );
-}
+};
+export default withTranslation(ChordFinder);
 
 const screenHeight = Math.round(Dimensions.get("window").height),
   styles = StyleSheet.create({
@@ -244,28 +190,6 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       position: "absolute",
       bottom: 0,
       alignItems: "center",
-    },
-    translationContainer: {
-      position: "absolute",
-      top: 30,
-      left: 20,
-      width: "100%",
-      flexDirection: "row",
-      justifyContent: "flex-start",
-      alignItems: "center",
-    },
-    translationSwitch: {
-      transform: [{ scale: 1.5 }],
-    },
-    activeTranslation: {
-      color: "#000",
-      paddingLeft: 10,
-      paddingRight: 10,
-    },
-    passiveTranslation: {
-      color: "#9FA5AA",
-      paddingLeft: 10,
-      paddingRight: 10,
     },
     clearButton: {
       position: "absolute",
