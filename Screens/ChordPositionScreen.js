@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { StyleSheet, View } from "react-native";
-import { chordTranslation, theme, quality, alteration } from "../utils";
+import { chordTranslation, quality, alteration } from "../utils/guitarUtils";
+import { theme } from "../utils/styleUtils";
 import { Button } from "galio-framework";
 import ChordText from "../components/ChordText";
 import PlaySchema from "../components/PlaySchema";

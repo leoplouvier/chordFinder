@@ -1,7 +1,7 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text } from "galio-framework";
-import { guitarStrings } from "../utils";
+import { guitarStrings } from "../utils/guitarUtils";
 
 export default function PlaySchema(props) {
   let chordArray = props.chord.split(" ").reverse(),

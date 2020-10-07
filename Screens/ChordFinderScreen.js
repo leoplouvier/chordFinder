@@ -1,18 +1,21 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Image, Dimensions, TextInput } from "react-native";
 import { Button } from "galio-framework";
-import { chordTranslation, theme } from "../utils";
+import { theme } from "../utils/styleUtils";
 import ChordText from "../components/ChordText";
-import { withTranslation } from "../translationStore";
+import {
+  getChordCurrentTranslation,
+  withTranslation,
+} from "../translationStore";
 
 const ChordFinder = (props) => {
   const [guitarStrings, selectCase] = useState([
-      { nameIndex: 2, value: "", key: 1 },
-      { nameIndex: 6, value: "", key: 2 },
-      { nameIndex: 4, value: "", key: 3 },
-      { nameIndex: 1, value: "", key: 4 },
-      { nameIndex: 5, value: "", key: 5 },
-      { nameIndex: 2, value: "", key: 6 },
+      { name: "E", value: "", key: 1 },
+      { name: "B", value: "", key: 2 },
+      { name: "G", value: "", key: 3 },
+      { name: "D", value: "", key: 4 },
+      { name: "A", value: "", key: 5 },
+      { name: "E", value: "", key: 6 },
     ]),
     [chordResult, changeChord] = useState({}),
     [selectedImage, changeSelectedImage] = useState(0),
@@ -44,7 +47,6 @@ const ChordFinder = (props) => {
           chordStr = data[0].chordName.split(","),
           chordObj = {
             root: chordStr[0],
-            rootIndex: chordTranslation.us.findIndex((c) => c === chordStr[0]),
             quality: chordStr[1],
             tension: chordStr[2],
             bass: chordStr[3],
@@ -91,7 +93,7 @@ const ChordFinder = (props) => {
           <TextInput
             style={inputStyle}
             key={string.key}
-            placeholder={props.state.translationArray[string.nameIndex]}
+            placeholder={getChordCurrentTranslation(string.name)}
             keyboardType="decimal-pad"
             placeholderTextColor="#9FA5AA"
             value={string.value}
@@ -141,7 +143,7 @@ const ChordFinder = (props) => {
         )}
         {chordResult ? (
           <ChordText
-            root={props.state.translationArray[chordResult.rootIndex]}
+            root={getChordCurrentTranslation(chordResult.root)}
             quality={chordResult.quality}
             tension={chordResult.tension}
           />

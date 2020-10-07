@@ -1,61 +1,23 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Switch } from "react-native";
+import React from "react";
+import { View, StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import ChordFinder from "./Screens/ChordFinderScreen";
-import ChordPosition from "./Screens/ChordPositionScreen";
+import ChordFinder from "./screens/ChordFinderScreen";
+import ChordPosition from "./screens/ChordPositionScreen";
 import { Icon, Text } from "galio-framework";
 import { Provider } from "react-redux";
-import { changeTranslation, store } from "./translationStore";
-import { theme } from "./utils";
+import { store } from "./translationStore";
+import TranslationSwitch from "./components/TranslationSwitch";
 
 const Tab = createBottomTabNavigator();
 
 export default function App() {
-  const [translationEU, setTranslation] = useState(
-      store.getState().translation === "eu"
-    ),
-    translate = () => {
-      changeTranslation();
-      setTranslation(!translationEU);
-    };
   return (
     <Provider store={store}>
       <NavigationContainer>
         <View style={styles.header}>
           <Text h5>Chord Finder</Text>
-
-          <View style={styles.translationContainer}>
-            <Text
-              style={
-                !translationEU
-                  ? styles.activeTranslation
-                  : styles.passiveTranslation
-              }
-            >
-              A,B,C,...
-            </Text>
-            <Switch
-              style={styles.translationSwitch}
-              trackColor={{
-                false: theme.color.inactive,
-                true: theme.color.primary,
-              }}
-              thumbColor={theme.color.white}
-              ios_backgroundColor="#3e3e3e"
-              onValueChange={translate}
-              value={translationEU}
-            />
-            <Text
-              style={
-                translationEU
-                  ? styles.activeTranslation
-                  : styles.passiveTranslation
-              }
-            >
-              Do,Ré,Mi,...
-            </Text>
-          </View>
+          <TranslationSwitch />
         </View>
         <Tab.Navigator
           screenOptions={({ route }) => ({
@@ -95,26 +57,5 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingTop: 20,
     justifyContent: "center",
-  },
-  translationContainer: {
-    position: "absolute",
-    top: 45,
-    right: 0,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  translationSwitch: {
-    transform: [{ scale: 1.5 }],
-  },
-  activeTranslation: {
-    color: "#000",
-    paddingLeft: 10,
-    paddingRight: 10,
-  },
-  passiveTranslation: {
-    color: "#9FA5AA",
-    paddingLeft: 10,
-    paddingRight: 10,
   },
 });

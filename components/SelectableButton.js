@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, Button } from "galio-framework";
-import { theme } from "../utils";
+import { theme } from "../utils/styleUtils";
 
 export default function SelectableButton(props) {
   return (
