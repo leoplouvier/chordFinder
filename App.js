@@ -6,7 +6,7 @@ import ChordFinder from "./screens/ChordFinderScreen";
 import ChordPosition from "./screens/ChordPositionScreen";
 import { Icon, Text } from "galio-framework";
 import { Provider } from "react-redux";
-import { store } from "./translationStore";
+import { store } from "./redux/store";
 import TranslationSwitch from "./components/TranslationSwitch";
 
 const Tab = createBottomTabNavigator();

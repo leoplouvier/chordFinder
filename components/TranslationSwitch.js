@@ -1,13 +1,11 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Switch } from "react-native";
 import { Text } from "galio-framework";
-import { withTranslation, changeTranslation } from "../translationStore";
 import { theme } from "../utils/styleUtils";
+import { withAccessToStore, changeTranslation } from "../redux/store";
 
 const TranslationSwitch = (props) => {
-  const [translationEU, setTranslation] = useState(
-      props.state.translation === "eu"
-    ),
+  const [translationEU, setTranslation] = useState(false),
     translate = () => {
       changeTranslation();
       setTranslation(!translationEU);
@@ -43,7 +41,7 @@ const TranslationSwitch = (props) => {
   );
 };
 
-export default withTranslation(TranslationSwitch);
+export default withAccessToStore(TranslationSwitch);
 
 const styles = StyleSheet.create({
   translationContainer: {

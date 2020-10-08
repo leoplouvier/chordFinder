@@ -7,10 +7,7 @@ import ChordText from "../components/ChordText";
 import PlaySchema from "../components/PlaySchema";
 import Swiper from "react-native-swiper";
 import SelectableButton from "../components/SelectableButton";
-import {
-  getChordCurrentTranslation,
-  withTranslation,
-} from "../translationStore";
+import { getChordCurrentTranslation, withAccessToStore } from "../redux/store";
 
 const ChordPosition = (props) => {
   const [selectedChord, changeChord] = useState(""),
@@ -55,9 +52,9 @@ const ChordPosition = (props) => {
       }
     };
   let chordArray =
-    props.state.translation === "us"
-      ? [...props.state.translationArray].sort()
-      : props.state.translationArray;
+    props.state.translation.translation === "us"
+      ? [...props.state.translation.translationArray].sort()
+      : props.state.translation.translationArray;
 
   return (
     <View>
@@ -69,11 +66,13 @@ const ChordPosition = (props) => {
               isSelected={
                 !selectedChord ||
                 selectedChord ===
-                  props.state.translationArray.findIndex((c) => c === chord)
+                  props.state.translation.translationArray.findIndex(
+                    (c) => c === chord
+                  )
               }
               textString={chord}
               onPress={() => {
-                let chordValue = props.state.translationArray.findIndex(
+                let chordValue = props.state.translation.translationArray.findIndex(
                   (c) => c === chord
                 );
                 changeChord(chordValue);
@@ -142,7 +141,7 @@ const ChordPosition = (props) => {
   );
 };
 
-export default withTranslation(ChordPosition);
+export default withAccessToStore(ChordPosition);
 
 const styles = StyleSheet.create({
   ButtonContainer: { flexDirection: "row", flexWrap: "wrap", marginTop: 15 },
