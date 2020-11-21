@@ -10,14 +10,16 @@ export default function ChordText(props) {
     root = alteration ? props.root.split(alteration)[0] : props.root;
   return (
     <View style={styles.chordContainer}>
-      <Text h1>{root}</Text>
-      <Text h3 style={{ marginBottom: 10 }}>
+      <Text h1 style={styles.h1}>
+        {root}
+      </Text>
+      <Text h3 style={styles.h3}>
         {alteration}
       </Text>
-      <Text h6 style={{ marginTop: 30 }}>
+      <Text h6 style={styles.h6}>
         {props.quality}
       </Text>
-      <Text h5 style={{ marginBottom: 10 }}>
+      <Text h5 style={styles.h5}>
         {props.tension}
       </Text>
     </View>
@@ -26,4 +28,8 @@ export default function ChordText(props) {
 
 const styles = StyleSheet.create({
   chordContainer: { flexDirection: "row", alignItems: "center" },
+  h1: { color: "#fff" },
+  h3: { color: "#fff", marginBottom: 10 },
+  h5: { color: "#fff", marginBottom: 10 },
+  h6: { color: "#fff", marginTop: 30 },
 });

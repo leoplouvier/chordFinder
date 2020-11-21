@@ -169,7 +169,8 @@ const screenHeight = Math.round(Dimensions.get("window").height),
     container: {
       width: "100%",
       height: "100%",
-      backgroundColor: "#fff",
+      backgroundColor: theme.color.background,
+      color: "#fff",
       alignItems: "center",
     },
     background: {

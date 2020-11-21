@@ -1,6 +1,7 @@
 import React from "react";
-import { Text, Button } from "galio-framework";
+import { Text, Button, Icon } from "galio-framework";
 import { theme } from "../utils/styleUtils";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 export default function SelectableButton(props) {
   return (
@@ -19,17 +20,25 @@ export default function SelectableButton(props) {
       onPress={props.onPress}
       disabled={props.disabled}
     >
-      <Text
-        style={{
-          color: props.isSelected
-            ? "#fff"
-            : props.disabled
-            ? theme.color.inactive
-            : theme.color.primary,
-        }}
-      >
-        {props.textString}
-      </Text>
+      {props.icon ? (
+        <FontAwesome5
+          name={props.icon}
+          size={25}
+          color={props.isSelected ? "#fff" : theme.color.inactive}
+        />
+      ) : (
+        <Text
+          style={{
+            color: props.isSelected
+              ? "#fff"
+              : props.disabled
+              ? theme.color.inactive
+              : theme.color.primary,
+          }}
+        >
+          {props.textString}
+        </Text>
+      )}
     </Button>
   );
 }

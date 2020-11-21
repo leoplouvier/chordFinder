@@ -57,7 +57,7 @@ const ChordPosition = (props) => {
       : props.state.translation.translationArray;
 
   return (
-    <View>
+    <View style={styles.container}>
       <View style={styles.ButtonContainer}>
         {chordArray.map((chord, i) => {
           return (
@@ -122,7 +122,11 @@ const ChordPosition = (props) => {
         How to play
       </Button>
       {chordResult.length > 0 && (
-        <Swiper containerStyle={styles.swiperContainer} ref={swiperEl}>
+        <Swiper
+          containerStyle={styles.swiperContainer}
+          ref={swiperEl}
+          dotColor="#fff"
+        >
           {chordResult.map((c, index) => {
             return (
               <View style={styles.swiperViewContainer} key={index}>
@@ -144,13 +148,17 @@ const ChordPosition = (props) => {
 export default withAccessToStore(ChordPosition);
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.color.background,
+    height: "100%",
+  },
   ButtonContainer: { flexDirection: "row", flexWrap: "wrap", marginTop: 15 },
   searchButton: { marginTop: 15 },
   swiperContainer: {
     width: "100%",
     height: 360,
     position: "absolute",
-    top: "100%",
+    top: "49%",
   },
   swiperViewContainer: {
     alignItems: "center",

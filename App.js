@@ -8,6 +8,7 @@ import { Icon, Text } from "galio-framework";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
 import TranslationSwitch from "./components/TranslationSwitch";
+import { theme } from "./utils/styleUtils";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,10 +17,13 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <View style={styles.header}>
-          <Text h5>Chord Finder</Text>
+          <Text h5 style={styles.headerTitle}>
+            Chord Finder
+          </Text>
           <TranslationSwitch />
         </View>
         <Tab.Navigator
+          tabBarOptions={{ tabStyle: styles.footer }}
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
@@ -57,5 +61,12 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingTop: 20,
     justifyContent: "center",
+    backgroundColor: theme.color.headerBackground,
+  },
+  headerTitle: {
+    color: "#fff",
+  },
+  footer: {
+    backgroundColor: theme.color.headerBackground,
   },
 });

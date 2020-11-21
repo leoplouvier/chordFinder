@@ -59,7 +59,14 @@ export default function PlaySchema(props) {
                 >
                   {position === "X" ? (
                     <View>
-                      <Text h4 style={{ marginLeft: -35, marginTop: -25 }}>
+                      <Text
+                        h4
+                        style={{
+                          marginLeft: -37,
+                          marginTop: -25,
+                          color: "#fff",
+                        }}
+                      >
                         X
                       </Text>
                     </View>
@@ -73,6 +80,7 @@ export default function PlaySchema(props) {
                                 backgroundColor: "init",
                                 borderWidth: 1,
                                 borderRadius: 25,
+                                borderColor: "#fff",
                               }
                             : styles.position
                         }
@@ -86,7 +94,9 @@ export default function PlaySchema(props) {
         );
       })}
       <View style={styles.beginning}>
-        <Text h4>{beginning}</Text>
+        <Text h4 style={styles.beginningText}>
+          {beginning}
+        </Text>
       </View>
       <View style={styles.stringNames}>
         {guitarStrings.map((string, i) => {
@@ -111,7 +121,7 @@ const styles = StyleSheet.create({
     width: 280,
     height: 40,
     borderLeftWidth: 8,
-    borderColor: "#000",
+    borderColor: "#fff",
     marginBottom: 0,
     flexDirection: "row",
   },
@@ -119,12 +129,13 @@ const styles = StyleSheet.create({
     width: 55,
     height: "100%",
     borderWidth: 1,
+    borderColor: "#fff",
   },
   position: {
     width: 25,
     height: 25,
     borderRadius: 25,
-    backgroundColor: "#000",
+    backgroundColor: "#fff",
     marginLeft: -40,
     marginTop: -12,
   },
@@ -134,6 +145,9 @@ const styles = StyleSheet.create({
     left: 0,
     width: 65,
     alignItems: "center",
+  },
+  beginningText: {
+    color: "#fff",
   },
   stringNames: {
     position: "absolute",

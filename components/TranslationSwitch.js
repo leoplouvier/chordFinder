@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 1.5 }],
   },
   activeTranslation: {
-    color: "#000",
+    color: theme.color.primary,
     paddingLeft: 10,
     paddingRight: 10,
   },
