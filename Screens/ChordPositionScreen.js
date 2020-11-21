@@ -126,6 +126,7 @@ const ChordPosition = (props) => {
           containerStyle={styles.swiperContainer}
           ref={swiperEl}
           dotColor="#fff"
+          activeDotColor={theme.color.primary}
         >
           {chordResult.map((c, index) => {
             return (

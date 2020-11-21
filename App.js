@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, StatusBar } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ChordFinder from "./screens/ChordFinderScreen";
@@ -16,6 +16,7 @@ export default function App() {
   return (
     <Provider store={store}>
       <NavigationContainer>
+        <StatusBar translucent />
         <View style={styles.header}>
           <Text h5 style={styles.headerTitle}>
             Chord Finder
@@ -23,7 +24,10 @@ export default function App() {
           <TranslationSwitch />
         </View>
         <Tab.Navigator
-          tabBarOptions={{ tabStyle: styles.footer }}
+          tabBarOptions={{
+            tabStyle: styles.footer,
+            activeTintColor: theme.color.primary,
+          }}
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused, color, size }) => {
               let iconName;
@@ -68,5 +72,8 @@ const styles = StyleSheet.create({
   },
   footer: {
     backgroundColor: theme.color.headerBackground,
+  },
+  statusBar: {
+    backgroundColor: "red",
   },
 });

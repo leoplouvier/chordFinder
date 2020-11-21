@@ -153,7 +153,9 @@ const GuitarNeck = (props) => {
                 key={h + "help"}
                 style={{ marginTop: getHelpTop(h), alignItems: "center" }}
               >
-                <Text h3> {h} </Text>
+                <Text h3 style={{ color: "#fff" }}>
+                  {" " + h + " "}
+                </Text>
               </View>
             );
           })}

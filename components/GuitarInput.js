@@ -30,7 +30,7 @@ const GuitarInput = (props) => {
     [selectedImage, changeSelectedImage] = useState(0),
     [disableFind, changeDisableFind] = useState(true),
     images = [
-      require(".././assets/guitarHead0.png"),
+      require(".././assets/guitar0.png"),
       require(".././assets/guitarHead1.png"),
       require(".././assets/guitarHead2.png"),
       require(".././assets/guitarHead3.png"),
@@ -74,18 +74,7 @@ const GuitarInput = (props) => {
     };
   return (
     <View style={styles.container}>
-      {images.map((image, i) => (
-        <Image
-          key={i}
-          style={styles.background}
-          source={image}
-          style={
-            selectedImage === i
-              ? styles.background
-              : { ...styles.background, opacity: 0 }
-          }
-        />
-      ))}
+      <Image source={images[0]} style={styles.background} />
       {guitarStrings.map((string) => {
         let inputStyle = [styles.caseInput];
         string.key <= 3
@@ -154,6 +143,7 @@ const GuitarInput = (props) => {
             root={getChordCurrentTranslation(chordResult.root)}
             quality={chordResult.quality}
             tension={chordResult.tension}
+            color="primary"
           />
         ) : (
           ""
@@ -174,10 +164,10 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       alignItems: "center",
     },
     background: {
-      width: "50%",
-      height: (40 / 100) * screenHeight,
+      width: "35%",
+      height: (45 / 100) * screenHeight,
       position: "absolute",
-      top: 80,
+      top: 40,
     },
     caseInput: {
       width: "22%",
@@ -187,6 +177,7 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       borderWidth: 1,
       borderRadius: 5,
       paddingLeft: 10,
+      color: "#fff",
     },
     caseRight: {
       right: 10,
@@ -199,7 +190,7 @@ const screenHeight = Math.round(Dimensions.get("window").height),
     caseBottom: { top: 290 },
     bottomActions: {
       position: "absolute",
-      bottom: 200,
+      bottom: 120,
       alignItems: "center",
     },
     clearButton: {
