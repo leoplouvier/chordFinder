@@ -25,6 +25,7 @@ export default function App() {
         </View>
         <Tab.Navigator
           tabBarOptions={{
+            keyboardHidesTabBar: true,
             tabStyle: styles.footer,
             activeTintColor: theme.color.primary,
           }}

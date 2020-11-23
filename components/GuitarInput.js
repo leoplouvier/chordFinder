@@ -31,12 +31,12 @@ const GuitarInput = (props) => {
     [disableFind, changeDisableFind] = useState(true),
     images = [
       require(".././assets/guitar0.png"),
-      require(".././assets/guitarHead1.png"),
-      require(".././assets/guitarHead2.png"),
-      require(".././assets/guitarHead3.png"),
-      require(".././assets/guitarHead4.png"),
-      require(".././assets/guitarHead5.png"),
-      require(".././assets/guitarHead6.png"),
+      require(".././assets/guitar1.png"),
+      require(".././assets/guitar2.png"),
+      require(".././assets/guitar3.png"),
+      require(".././assets/guitar4.png"),
+      require(".././assets/guitar5.png"),
+      require(".././assets/guitar6.png"),
     ];
 
   const findChord = async () => {
@@ -47,6 +47,7 @@ const GuitarInput = (props) => {
         chord += string.value ? string.value : "X";
         string.key != 1 && (chord += "-");
       });
+      changeSelectedImage(0);
       try {
         let response = await fetch(
             "https://api.uberchord.com/v1/chords?voicing=" + chord
@@ -74,7 +75,18 @@ const GuitarInput = (props) => {
     };
   return (
     <View style={styles.container}>
-      <Image source={images[0]} style={styles.background} />
+      {images.map((image, i) => (
+        <Image
+          key={i}
+          style={styles.background}
+          source={image}
+          style={
+            selectedImage === i
+              ? styles.background
+              : { ...styles.background, opacity: 0 }
+          }
+        />
+      ))}
       {guitarStrings.map((string) => {
         let inputStyle = [styles.caseInput];
         string.key <= 3
@@ -164,10 +176,10 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       alignItems: "center",
     },
     background: {
-      width: "35%",
-      height: (45 / 100) * screenHeight,
+      width: "42%",
+      height: (50 / 100) * screenHeight,
       position: "absolute",
-      top: 40,
+      top: 10,
     },
     caseInput: {
       width: "22%",
@@ -189,13 +201,12 @@ const screenHeight = Math.round(Dimensions.get("window").height),
     caseMid: { top: 200 },
     caseBottom: { top: 290 },
     bottomActions: {
-      position: "absolute",
-      bottom: 120,
+      marginTop: "110%",
       alignItems: "center",
     },
     clearButton: {
       position: "absolute",
-      top: 350,
+      top: 340,
       right: 20,
       width: 60,
     },

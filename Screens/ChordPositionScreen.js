@@ -64,16 +64,16 @@ const ChordPosition = (props) => {
             <SelectableButton
               key={i}
               isSelected={
-                !selectedChord ||
+                selectedChord === "" ||
                 selectedChord ===
                   props.state.translation.translationArray.findIndex(
-                    (c) => c === chord
+                    (translatedChord) => translatedChord === chord
                   )
               }
               textString={chord}
               onPress={() => {
                 let chordValue = props.state.translation.translationArray.findIndex(
-                  (c) => c === chord
+                  (translatedChord) => translatedChord === chord
                 );
                 changeChord(chordValue);
                 disableSharp(["E", "B"].includes(chord) ? true : false);
@@ -113,9 +113,9 @@ const ChordPosition = (props) => {
         })}
       </View>
       <Button
-        disabled={!selectedChord}
+        disabled={selectedChord === ""}
         style={styles.searchButton}
-        color={!selectedChord ? theme.color.disabled : theme.color.accent}
+        color={selectedChord === "" ? theme.color.disabled : theme.color.accent}
         loading={isLoading}
         onPress={searchForChords}
       >
