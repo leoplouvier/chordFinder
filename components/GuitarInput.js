@@ -161,7 +161,7 @@ const GuitarInput = (props) => {
             onPress={findChord}
             disabled={disableFind}
           >
-            find chord
+            Find chord
           </Button>
         )}
         {chordResult ? (
