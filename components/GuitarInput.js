@@ -106,7 +106,7 @@ const GuitarInput = (props) => {
         (string.key === 1 || string.key === 6) &&
           inputStyle.push(styles.caseBottom);
         return (
-          <View style={inputStyle}>
+          <View style={inputStyle} key={string.key}>
             {!!string.value && (
               <Text style={styles.caseInputText}>
                 {getChordCurrentTranslation(string.name)}
@@ -114,7 +114,6 @@ const GuitarInput = (props) => {
             )}
             <TextInput
               style={styles.caseInput}
-              key={string.key}
               placeholder={getChordCurrentTranslation(string.name)}
               keyboardType="decimal-pad"
               placeholderTextColor={theme.color.gray}
