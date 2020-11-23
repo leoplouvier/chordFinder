@@ -10,5 +10,6 @@ export const theme = {
     inactive: "#767577",
     darkInactive: "#3B3A3B",
     white: "#f4f3f4",
+    gray: "#9FA5AA",
   },
 };

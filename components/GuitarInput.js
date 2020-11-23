@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { StyleSheet, View, Image, Dimensions, TextInput } from "react-native";
+import {
+  StyleSheet,
+  View,
+  Image,
+  Dimensions,
+  TextInput,
+  Text,
+} from "react-native";
 import { Button } from "galio-framework";
 import { theme } from "../utils/styleUtils";
 import ChordText from "../components/ChordText";
@@ -88,7 +95,7 @@ const GuitarInput = (props) => {
         />
       ))}
       {guitarStrings.map((string) => {
-        let inputStyle = [styles.caseInput];
+        let inputStyle = [styles.caseInputContainer];
         string.key <= 3
           ? inputStyle.push(styles.caseRight)
           : inputStyle.push(styles.caseLeft);
@@ -99,33 +106,40 @@ const GuitarInput = (props) => {
         (string.key === 1 || string.key === 6) &&
           inputStyle.push(styles.caseBottom);
         return (
-          <TextInput
-            style={inputStyle}
-            key={string.key}
-            placeholder={getChordCurrentTranslation(string.name)}
-            keyboardType="decimal-pad"
-            placeholderTextColor="#9FA5AA"
-            value={string.value}
-            onFocus={() => changeSelectedImage(string.key)}
-            onChangeText={(text) => {
-              let numText = Number(text);
-              if ((text && !numText && numText !== 0) || numText > 26) {
-                return;
-              }
-              let allEmpty = !text,
-                valuesToReplace = guitarStrings.map((s) => {
-                  allEmpty &&
-                    s.key !== string.key &&
-                    s.value !== "" &&
-                    (allEmpty = false);
-                  return s.key === string.key
-                    ? { name: s.name, value: text, key: s.key }
-                    : s;
-                });
-              changeDisableFind(allEmpty);
-              selectCase(valuesToReplace);
-            }}
-          />
+          <View style={inputStyle}>
+            {!!string.value && (
+              <Text style={styles.caseInputText}>
+                {getChordCurrentTranslation(string.name)}
+              </Text>
+            )}
+            <TextInput
+              style={styles.caseInput}
+              key={string.key}
+              placeholder={getChordCurrentTranslation(string.name)}
+              keyboardType="decimal-pad"
+              placeholderTextColor={theme.color.gray}
+              value={string.value}
+              onFocus={() => changeSelectedImage(string.key)}
+              onChangeText={(text) => {
+                let numText = Number(text);
+                if ((text && !numText && numText !== 0) || numText > 26) {
+                  return;
+                }
+                let allEmpty = !text,
+                  valuesToReplace = guitarStrings.map((s) => {
+                    allEmpty &&
+                      s.key !== string.key &&
+                      s.value !== "" &&
+                      (allEmpty = false);
+                    return s.key === string.key
+                      ? { name: s.name, value: text, key: s.key }
+                      : s;
+                  });
+                changeDisableFind(allEmpty);
+                selectCase(valuesToReplace);
+              }}
+            />
+          </View>
         );
       })}
       <Button
@@ -179,35 +193,42 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       width: "42%",
       height: (50 / 100) * screenHeight,
       position: "absolute",
-      top: 10,
+      top: 30,
     },
     caseInput: {
-      width: "22%",
-      position: "absolute",
+      width: 70,
       height: 40,
-      borderColor: "gray",
+      borderColor: theme.color.gray,
       borderWidth: 1,
       borderRadius: 5,
       paddingLeft: 10,
       color: "#fff",
     },
+    caseInputContainer: {
+      position: "absolute",
+    },
+    caseInputText: {
+      position: "absolute",
+      top: -20,
+      color: theme.color.gray,
+    },
     caseRight: {
-      right: 10,
+      right: 20,
     },
     caseLeft: {
-      left: 10,
+      left: 20,
     },
-    caseTop: { top: 110 },
-    caseMid: { top: 200 },
-    caseBottom: { top: 290 },
+    caseTop: { top: 30 },
+    caseMid: { top: 130 },
+    caseBottom: { top: 230 },
     bottomActions: {
       marginTop: "110%",
       alignItems: "center",
     },
     clearButton: {
       position: "absolute",
-      top: 340,
-      right: 20,
+      top: 300,
+      right: 10,
       width: 60,
     },
   });
