@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet, StatusBar } from "react-native";
+import { View, StyleSheet, StatusBar, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import ChordFinder from "./screens/ChordFinderScreen";
@@ -11,6 +11,7 @@ import TranslationSwitch from "./components/TranslationSwitch";
 import { theme } from "./utils/styleUtils";
 
 const Tab = createBottomTabNavigator();
+const icon = require("./assets/icon.png");
 
 export default function App() {
   return (
@@ -18,9 +19,7 @@ export default function App() {
       <NavigationContainer>
         <StatusBar translucent />
         <View style={styles.header}>
-          <Text h5 style={styles.headerTitle}>
-            Chord Finder
-          </Text>
+          <Image source={icon} style={styles.headerIcon} />
           <TranslationSwitch />
         </View>
         <Tab.Navigator
@@ -64,12 +63,17 @@ const styles = StyleSheet.create({
     borderBottomColor: "#D8DBDD",
     borderBottomWidth: 1,
     paddingLeft: 20,
-    paddingTop: 20,
-    justifyContent: "center",
+    paddingTop: 25,
+    justifyContent: "flex-start",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
     backgroundColor: theme.color.headerBackground,
   },
-  headerTitle: {
-    color: "#fff",
+  headerIcon: {
+    width: 45,
+    height: 45,
+    marginLeft: 10,
   },
   footer: {
     backgroundColor: theme.color.headerBackground,
