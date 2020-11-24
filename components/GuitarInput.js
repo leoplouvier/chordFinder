@@ -81,7 +81,7 @@ const GuitarInput = (props) => {
       changeDisableFind(true);
     };
   return (
-    <View style={styles.container}>
+    <View style={{ ...props.style, ...styles.container }}>
       {images.map((image, i) => (
         <Image
           key={i}

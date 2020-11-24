@@ -8,8 +8,7 @@ import { theme } from "../utils/styleUtils";
 
 const ChordFinder = (props) => {
   const modes = ["InputMode", "NeckMode"],
-    [currentMode, changeMode] = useState(modes[0]),
-    neckImage = require("../assets/guitarNeck.png");
+    [currentMode, changeMode] = useState(modes[0]);
 
   return (
     <View style={styles.container}>
@@ -28,11 +27,14 @@ const ChordFinder = (props) => {
           );
         })}
       </View>
-      {currentMode === modes[1] ? (
-        <GuitarNeck image={neckImage} onPress={() => changeMode(modes[0])} />
-      ) : (
-        <GuitarInput state={props.state} />
-      )}
+      <GuitarNeck
+        style={currentMode === modes[0] ? styles.hidden : {}}
+        onPress={() => changeMode(modes[0])}
+      />
+      <GuitarInput
+        style={currentMode === modes[1] ? styles.hidden : {}}
+        state={props.state}
+      />
     </View>
   );
 };
@@ -47,5 +49,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     backgroundColor: theme.color.background,
+  },
+  hidden: {
+    display: "none",
   },
 });

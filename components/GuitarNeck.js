@@ -10,7 +10,7 @@ const GuitarNeck = (props) => {
         ? props.state.chord.strings.split(" ")
         : ["X", "X", "X", "X", "X", "X"],
     [neckCases, changeNeck] = useState(init),
-    neck = props.image,
+    neck = require(".././assets/guitarNeck.png"),
     help = [1, 3, 5, 7, 9, 12, 15, 17, 19, 21],
     cases = [];
   for (let i = 0; i < 6; i++) {
@@ -46,6 +46,7 @@ const GuitarNeck = (props) => {
   return (
     <View
       style={{
+        ...props.style,
         justifyContent: "center",
         alignItems: "center",
         height: "65%",
