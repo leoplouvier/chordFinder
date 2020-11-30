@@ -141,7 +141,7 @@ const GuitarInput = (props) => {
       <View style={styles.bottomActions}>
         {disableFind ? (
           <Button color={theme.color.disabled} opacity={0.2} disabled>
-            find chord
+            Find chord
           </Button>
         ) : (
           <Button
