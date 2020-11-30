@@ -8,6 +8,7 @@ import PlaySchema from "../components/PlaySchema";
 import Swiper from "react-native-swiper";
 import SelectableButton from "../components/SelectableButton";
 import { getChordCurrentTranslation, withAccessToStore } from "../redux/store";
+import { getPositionWithChord } from "../services/httpService";
 
 const ChordPosition = (props) => {
   const [selectedChord, changeChord] = useState(""),
@@ -27,29 +28,12 @@ const ChordPosition = (props) => {
             : selectedAlteration);
       selectedQuality && (chord += "_" + selectedQuality);
       changeLoading(true);
-      try {
-        let response = await fetch(
-            "https://api.uberchord.com/v1/chords?nameLike=" + chord
-          ),
-          data = await response.json();
-        let formatedData = data.map((d) => {
-          let chordArray = d.chordName.split(",");
-          return {
-            ...d,
-            chord: {
-              root: chordArray[0],
-              quality: chordArray[1],
-              tension: chordArray[2],
-            },
-          };
-        });
+      let positionResult = await getPositionWithChord(chord);
+      if (positionResult) {
         swiperEl.current && swiperEl.current.scrollTo(1);
-        changeResult(formatedData);
-        changeLoading(false);
-      } catch (error) {
-        changeLoading(false);
-        console.log(error);
+        changeResult(positionResult);
       }
+      changeLoading(false);
     };
   let chordArray =
     props.state.translation.translation === "us"

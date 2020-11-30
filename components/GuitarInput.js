@@ -15,6 +15,7 @@ import {
   getChordCurrentTranslation,
   withAccessToStore,
 } from "../redux/store";
+import { getChordWithPosition } from "../services/httpService";
 
 const GuitarInput = (props) => {
   let initString =
@@ -55,22 +56,10 @@ const GuitarInput = (props) => {
         string.key != 1 && (chord += "-");
       });
       changeSelectedImage(0);
-      try {
-        let response = await fetch(
-            "https://api.uberchord.com/v1/chords?voicing=" + chord
-          ),
-          data = await response.json(),
-          chordStr = data[0].chordName.split(","),
-          chordObj = {
-            root: chordStr[0],
-            quality: chordStr[1],
-            tension: chordStr[2],
-            bass: chordStr[3],
-          };
-        setChord(chordObj);
-        changeChord({ ...data[0], chordObj });
-      } catch (error) {
-        console.log(error);
+      let chordResponse = await getChordWithPosition(chord);
+      if (chordResponse) {
+        setChord(chordResponse.chordObj);
+        changeChord(chordResponse);
       }
     },
     clearAll = () => {

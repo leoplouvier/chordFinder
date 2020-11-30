@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { View, StyleSheet } from "react-native";
+import {
+  View,
+  StyleSheet,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import GuitarNeck from "../components/GuitarNeck";
 import GuitarInput from "../components/GuitarInput";
 import SelectableButton from "../components/SelectableButton";
@@ -11,31 +16,30 @@ const ChordFinder = (props) => {
     [currentMode, changeMode] = useState(modes[0]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.modeSelection}>
-        {modes.map((mode, i) => {
-          let icon = i == 0 ? "keyboard" : "guitar";
-          return (
-            <SelectableButton
-              key={mode}
-              isSelected={mode === currentMode}
-              icon={icon}
-              onPress={() => {
-                changeMode(mode);
-              }}
-            />
-          );
-        })}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View style={styles.container}>
+        <View style={styles.modeSelection}>
+          {modes.map((mode, i) => {
+            let icon = i == 0 ? "keyboard" : "guitar";
+            return (
+              <SelectableButton
+                key={mode}
+                isSelected={mode === currentMode}
+                icon={icon}
+                onPress={() => {
+                  changeMode(mode);
+                }}
+              />
+            );
+          })}
+        </View>
+        {currentMode === modes[1] ? (
+          <GuitarNeck onPress={() => changeMode(modes[0])} />
+        ) : (
+          <GuitarInput state={props.state} />
+        )}
       </View>
-      <GuitarNeck
-        style={currentMode === modes[0] ? styles.hidden : {}}
-        onPress={() => changeMode(modes[0])}
-      />
-      <GuitarInput
-        style={currentMode === modes[1] ? styles.hidden : {}}
-        state={props.state}
-      />
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 export default withAccessToStore(ChordFinder);

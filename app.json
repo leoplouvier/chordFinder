@@ -24,6 +24,10 @@
     "androidNavigationBar": {
       "barStyle": "light-content",
       "backgroundColor": "#020202"
+    },
+    "android": {
+      "package": "com.leoplv.chordFinder",
+      "permissions": []
     }
   }
 }

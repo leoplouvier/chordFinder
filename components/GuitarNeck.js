@@ -3,6 +3,7 @@ import { ScrollView, Image, View } from "react-native";
 import { Button, Text } from "galio-framework";
 import { theme } from "../utils/styleUtils";
 import { changeChord, withAccessToStore } from "../redux/store";
+import { getChordWithPosition } from "../services/httpService";
 
 const GuitarNeck = (props) => {
   const init =
@@ -25,22 +26,10 @@ const GuitarNeck = (props) => {
     neckCases.forEach((c, index) => {
       chord += index == 0 ? c : "-" + c;
     });
-    try {
-      let response = await fetch(
-          "https://api.uberchord.com/v1/chords?voicing=" + chord
-        ),
-        data = await response.json(),
-        chordStr = data[0].chordName.split(","),
-        chordObj = {
-          root: chordStr[0],
-          quality: chordStr[1],
-          tension: chordStr[2],
-          bass: chordStr[3],
-        };
-      changeChord({ ...data[0], chordObj });
+    let chordResponse = await getChordWithPosition(chord);
+    if (chordResponse) {
+      changeChord(chordResponse);
       props.onPress();
-    } catch (error) {
-      console.log(error);
     }
   };
   return (
