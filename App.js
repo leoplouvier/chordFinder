@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./services/translationService";
 import { View, StyleSheet, StatusBar, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -11,6 +12,7 @@ import { store } from "./redux/store";
 import TranslationSwitch from "./components/TranslationSwitch";
 import { theme } from "./utils/styleUtils";
 import { Icon } from "galio-framework";
+import { useTranslation } from "react-i18next";
 
 const Tab = createBottomTabNavigator();
 function cacheImages(images) {
@@ -18,9 +20,9 @@ function cacheImages(images) {
     return Asset.fromModule(image).downloadAsync();
   });
 }
-
 export default function App() {
   const [isReady, setReady] = useState(false);
+  const { t, i18n } = useTranslation();
   const _loadAssetsAsync = async () => {
     const imageAssets = cacheImages([
       require("./assets/icon.png"),
@@ -76,12 +78,12 @@ export default function App() {
         >
           <Tab.Screen
             name="Home"
-            options={{ title: "Chord Finder" }}
+            options={{ title: t("CHORD_FINDER") }}
             component={ChordFinder}
           />
           <Tab.Screen
             name="ChordPosition"
-            options={{ title: "Chord Dictionnary" }}
+            options={{ title: t("CHORD_DICTIONNARY") }}
             component={ChordPosition}
           />
         </Tab.Navigator>

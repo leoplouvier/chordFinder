@@ -1,7 +1,9 @@
 /*
 TODO LIST : 
 
- - add translation
- - handle offline
+ - offline mode
+ - first time tutorial
+
+ - find scale mode
 
 */

@@ -4,8 +4,10 @@ import { Button, Text } from "galio-framework";
 import { theme } from "../utils/styleUtils";
 import { changeChord, withAccessToStore } from "../redux/store";
 import { getChordWithPosition } from "../services/httpService";
+import { useTranslation } from "react-i18next";
 
 const GuitarNeck = (props) => {
+  const { t, i18n } = useTranslation();
   const init =
       props.state.chord && props.state.chord.strings
         ? props.state.chord.strings.split(" ")
@@ -205,7 +207,7 @@ const GuitarNeck = (props) => {
           onPress={findChord}
           style={{ marginTop: 20 }}
         >
-          find Chord
+          {t("FIND_CHORD")}
         </Button>
       </View>
     </View>

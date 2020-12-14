@@ -16,6 +16,7 @@ import {
   withAccessToStore,
 } from "../redux/store";
 import { getChordWithPosition } from "../services/httpService";
+import { useTranslation } from "react-i18next";
 
 const GuitarInput = (props) => {
   let initString =
@@ -45,7 +46,8 @@ const GuitarInput = (props) => {
       require(".././assets/guitar4.png"),
       require(".././assets/guitar5.png"),
       require(".././assets/guitar6.png"),
-    ];
+    ],
+    { t, i18n } = useTranslation();
 
   const findChord = async () => {
       let chord = "",
@@ -136,12 +138,12 @@ const GuitarInput = (props) => {
         round
         color={theme.color.danger}
       >
-        Clear
+        {t("CLEAR")}
       </Button>
       <View style={styles.bottomActions}>
         {disableFind ? (
           <Button color={theme.color.disabled} opacity={0.2} disabled>
-            Find chord
+            {t("FIND_CHORD")}
           </Button>
         ) : (
           <Button
@@ -149,7 +151,7 @@ const GuitarInput = (props) => {
             onPress={findChord}
             disabled={disableFind}
           >
-            Find chord
+            {t("FIND_CHORD")}
           </Button>
         )}
         {chordResult ? (
@@ -217,6 +219,6 @@ const screenHeight = Math.round(Dimensions.get("window").height),
       position: "absolute",
       top: 300,
       right: 10,
-      width: 60,
+      width: 65,
     },
   });

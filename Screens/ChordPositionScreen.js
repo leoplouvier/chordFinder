@@ -9,9 +9,11 @@ import Swiper from "react-native-swiper";
 import SelectableButton from "../components/SelectableButton";
 import { getChordCurrentTranslation, withAccessToStore } from "../redux/store";
 import { getPositionWithChord } from "../services/httpService";
+import { useTranslation } from "react-i18next";
 
 const ChordPosition = (props) => {
-  const [selectedChord, changeChord] = useState(""),
+  const { t, i18n } = useTranslation(),
+    [selectedChord, changeChord] = useState(""),
     [selectedQuality, changeQuality] = useState("maj"),
     [selectedAlteration, changeAlteration] = useState(""),
     [chordResult, changeResult] = useState([]),
@@ -103,7 +105,7 @@ const ChordPosition = (props) => {
         loading={isLoading}
         onPress={searchForChords}
       >
-        How to play
+        {t("HOW_TO_PLAY")}
       </Button>
       {chordResult.length > 0 && (
         <Swiper
