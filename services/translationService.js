@@ -23,6 +23,7 @@ i18n
   .use(languageDetector)
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({
+    compatibilityJSON: 'v3',
     resources,
     keySeparator: false, // we do not use keys in form messages.welcome
     interpolation: {

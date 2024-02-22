@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ScrollView, Image, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ScrollView, Image, View, Dimensions } from "react-native";
 import { Button, Text } from "galio-framework";
 import { theme } from "../utils/styleUtils";
 import { changeChord, withAccessToStore } from "../redux/store";
@@ -8,42 +8,46 @@ import { useTranslation } from "react-i18next";
 
 const GuitarNeck = (props) => {
   const { t, i18n } = useTranslation();
-  const init =
-      props.state.chord && props.state.chord.strings
-        ? props.state.chord.strings.split(" ")
-        : ["X", "X", "X", "X", "X", "X"],
-    [neckCases, changeNeck] = useState(init),
-    neck = require(".././assets/guitarNeck.png"),
-    help = [1, 3, 5, 7, 9, 12, 15, 17, 19, 21],
-    cases = [];
-  for (let i = 0; i < 6; i++) {
-    let stringArray = [];
-    for (let j = 0; j < 22; j++) {
-      stringArray.push(0);
-    }
-    cases.push(stringArray);
-  }
+  const init = props.state.chord && props.state.chord.strings
+    ? props.state.chord.strings.split(" ")
+    : ["X", "X", "X", "X", "X", "X"];
+  const [neckCases, changeNeck] = useState(init)
+  const [loading, setLoading] = useState(false)
+  const neck = require(".././assets/guitarNeck.png")
+  const help = [1, 3, 5, 7, 9, 12, 15, 17, 19, 21]
+  const cases = new Array(6).fill(new Array(22).fill(0))
+  
   const findChord = async () => {
+    setLoading(true);
     let chord = "";
     neckCases.forEach((c, index) => {
       chord += index == 0 ? c : "-" + c;
     });
     let chordResponse = await getChordWithPosition(chord);
-    if (chordResponse) {
+    if (chordResponse && !chordResponse.error) {
       changeChord(chordResponse);
       props.onPress();
     }
+    setLoading(false);
   };
+  useEffect(()=>{
+    const fingering =  props.state.chord && props.state.chord.strings
+    ? props.state.chord.strings.split(" ")
+    : ["X", "X", "X", "X", "X", "X"]
+    changeNeck(fingering)
+  }, [props.state.chord])
+
   return (
     <View
       style={{
         ...props.style,
         justifyContent: "center",
         alignItems: "center",
-        height: "65%",
+        height: Dimensions.get('screen').height - 450,
+        marginTop:70
       }}
     >
-      <ScrollView style={{ width: "100%" }}>
+      <ScrollView style={{ width: Dimensions.get('screen').width }}>
         <Image
           source={neck}
           style={{
@@ -77,7 +81,7 @@ const GuitarNeck = (props) => {
                   minWidth: 7,
                   backgroundColor:
                     c === "X" ? theme.color.inactive : theme.color.primary,
-                  marginRight: 36 + index,
+                  marginRight: 41 + index,
                   opacity: ["0", 0, "X"].includes(c) ? 1 : 0,
                 }}
               ></View>
@@ -103,7 +107,7 @@ const GuitarNeck = (props) => {
                       color="transparent"
                       shadowless
                       style={{
-                        width: 46,
+                        width: 50,
                         height: getCasesHeight(i),
                         margin: 0,
                       }}
@@ -206,8 +210,11 @@ const GuitarNeck = (props) => {
           color={theme.color.primary}
           onPress={findChord}
           style={{ marginTop: 20 }}
+          disabled={neckCases.join("") == "XXXXXX"}
+          loading={loading}
+          loadingColor={theme.color.background}
         >
-          {t("FIND_CHORD")}
+         <Text style={{color:theme.color.background}}>{t("FIND_CHORD")}</Text> 
         </Button>
       </View>
     </View>

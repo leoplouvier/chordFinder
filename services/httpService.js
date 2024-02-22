@@ -1,3 +1,5 @@
+import { setChordError } from "../redux/store";
+
 const urls = {
   chordWithPosition: "https://api.uberchord.com/v1/chords?voicing=",
   positionWithChord: "https://api.uberchord.com/v1/chords?nameLike=",
@@ -6,8 +8,8 @@ const urls = {
 export const getChordWithPosition = async (position) => {
   try {
     let response = await fetch(urls.chordWithPosition + position),
-      data = await response.json(),
-      chordStr = data[0].chordName.split(","),
+      data = await response.json()
+      let chordStr = data[0].chordName.split(","),
       chordObj = {
         root: chordStr[0],
         quality: chordStr[1],
@@ -16,8 +18,8 @@ export const getChordWithPosition = async (position) => {
       };
     return { ...data[0], chordObj };
   } catch (error) {
-    console.log(error);
-    return null;
+    setChordError(true);
+    return {error};
   }
 };
 

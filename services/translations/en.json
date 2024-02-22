@@ -3,5 +3,6 @@
   "CHORD_FINDER": "Chord finder",
   "CHORD_DICTIONNARY": "Chord dictionnary",
   "CLEAR": "Clear",
-  "HOW_TO_PLAY": "How to play ?"
+  "HOW_TO_PLAY": "How to play ?",
+  "ERROR":" Oups, something went wrong..."
 }

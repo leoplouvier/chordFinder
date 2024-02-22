@@ -12,8 +12,16 @@ export const store = createStore(
 export const changeChord = (chord) => {
   store.dispatch({ type: "CHANGE_CHORD", chord });
 };
-export const changeTranslation = () =>
-  store.dispatch({ type: "CHANGE_TRANSLATION" });
+export const removeChord = () => {
+  store.dispatch({ type: "REMOVE_CHORD" });
+};
+
+export const setChordError = (error) =>
+  store.dispatch({ type: "SET_CHORD_ERROR", error });
+
+export const changeTranslation = (isEU) =>
+  store.dispatch({ type: "CHANGE_TRANSLATION", isEU });
+
 
 //WITH ACCESS TO STORE
 const mapStateToProps = (state, ...props) => {

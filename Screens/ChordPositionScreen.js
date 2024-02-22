@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import { chordTranslation, quality, alteration } from "../utils/guitarUtils";
 import { theme } from "../utils/styleUtils";
 import { Button } from "galio-framework";
@@ -10,6 +10,7 @@ import SelectableButton from "../components/SelectableButton";
 import { getChordCurrentTranslation, withAccessToStore } from "../redux/store";
 import { getPositionWithChord } from "../services/httpService";
 import { useTranslation } from "react-i18next";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 const ChordPosition = (props) => {
   const { t, i18n } = useTranslation(),
@@ -50,13 +51,13 @@ const ChordPosition = (props) => {
             <SelectableButton
               key={i}
               isSelected={
-                selectedChord === "" ||
-                selectedChord ===
+                 selectedChord ===
                   props.state.translation.translationArray.findIndex(
                     (translatedChord) => translatedChord === chord
                   )
               }
               textString={chord}
+              byLine={i>3 ? 3 : 4}
               onPress={() => {
                 let chordValue = props.state.translation.translationArray.findIndex(
                   (translatedChord) => translatedChord === chord
@@ -74,7 +75,7 @@ const ChordPosition = (props) => {
         {alteration.map((a) => {
           return (
             <SelectableButton
-              width={40}
+              byLine={3}
               key={a}
               isSelected={selectedAlteration === a}
               textString={!a ? "--" : a}
@@ -91,6 +92,7 @@ const ChordPosition = (props) => {
           return (
             <SelectableButton
               key={q}
+              byLine={2}
               isSelected={!selectedQuality || selectedQuality === q}
               textString={q}
               onPress={() => changeQuality(q)}
@@ -98,15 +100,17 @@ const ChordPosition = (props) => {
           );
         })}
       </View>
-      <Button
+      {selectedChord !== ""  &&<Button
         disabled={selectedChord === ""}
         style={styles.searchButton}
-        color={selectedChord === "" ? theme.color.disabled : theme.color.accent}
         loading={isLoading}
+        loadingColor={theme.color.primary}
         onPress={searchForChords}
+        shadowColor={theme.color.primary}
       >
-        {t("HOW_TO_PLAY")}
-      </Button>
+        <Text style={{color:theme.color.primary}}>{t("HOW_TO_PLAY")}</Text>
+         <FontAwesome5 name="search" size={15} color={theme.color.primary} style={{marginLeft: 10}}/>
+      </Button>}
       {chordResult.length > 0 && (
         <Swiper
           containerStyle={styles.swiperContainer}
@@ -138,9 +142,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: theme.color.background,
     height: "100%",
+    alignItems:"center"
   },
-  ButtonContainer: { flexDirection: "row", flexWrap: "wrap", marginTop: 15 },
-  searchButton: { marginTop: 15 },
+  ButtonContainer: { flexDirection: "row", flexWrap: "wrap", marginBottom: 45 },
+  searchButton: { 
+    width: "80%", 
+    flexDirection:"row",
+    backgroundColor:theme.color.background,
+    borderColor:theme.color.primary,
+    borderWidth:1 
+  },
   swiperContainer: {
     width: "100%",
     height: 360,

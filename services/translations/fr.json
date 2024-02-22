@@ -1,7 +1,8 @@
 {
-  "FIND_CHORD": "Trouver l'accord",
+  "FIND_CHORD": "Identifier l'accord",
   "CHORD_FINDER": "Recherche d'accords",
   "CHORD_DICTIONNARY": "Dictionnaire d'accords",
   "CLEAR": "Effacer",
-  "HOW_TO_PLAY": "Comment le jouer ?"
+  "HOW_TO_PLAY": "Comment le jouer ?",
+  "ERROR":" Oups, une erreur est survenue..."
 }

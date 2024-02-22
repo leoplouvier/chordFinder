@@ -10,7 +10,11 @@ export default function ChordText(props) {
     alteration = props.root ? findAlteration(props.root) : "",
     root = alteration ? props.root.split(alteration)[0] : props.root;
   return (
-    <View style={styles.chordContainer}>
+    <View style={
+      props.styling
+      ? {...styles.chordContainer, ...props.styling}
+      : styles.chordContainer
+    }>
       <Text
         h1
         style={
@@ -49,14 +53,14 @@ export default function ChordText(props) {
             : styles.h5
         }
       >
-        {props.tension}
+        {props.tension !== 'unknown' ? props.tension : '?'}
       </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  chordContainer: { flexDirection: "row", alignItems: "center" },
+  chordContainer: { flexDirection: "row", alignItems: "center"},
   h1: { color: "#fff" },
   h3: { color: "#fff", marginBottom: 10 },
   h5: { color: "#fff", marginBottom: 10 },

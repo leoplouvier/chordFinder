@@ -10,11 +10,8 @@ export const translationReducer = (state = initialState, action) => {
     case "CHANGE_TRANSLATION":
       return {
         ...state,
-        translation: state.translation === "us" ? "eu" : "us",
-        translationArray:
-          state.translation === "us"
-            ? chordTranslation.eu
-            : chordTranslation.us,
+        translation: action.isEU ? "eu" : "us",
+        translationArray: action.isEU ? chordTranslation.eu : chordTranslation.us,
       };
     default:
       return state;

@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import { Text } from "galio-framework";
 import { guitarStrings } from "../utils/guitarUtils";
+import { getChordCurrentTranslation } from "../redux/store";
 
 export default function PlaySchema(props) {
   let chordArray = props.chord.split(" ").reverse(),
@@ -101,8 +102,8 @@ export default function PlaySchema(props) {
       <View style={styles.stringNames}>
         {guitarStrings.map((string, i) => {
           return (
-            <Text key={i} muted style={{ marginBottom: 20 }}>
-              {string}
+            <Text key={i} muted style={{ marginBottom: 21 }}>
+              {getChordCurrentTranslation(string)}
             </Text>
           );
         })}
