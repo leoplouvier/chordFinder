@@ -10,7 +10,7 @@ export const theme = {
     dangerDark:"#6a0a16",
     dangerLight:"#c85967",
     inactive: "#767577",
-    darkInactive: "#3B3A3B",
+    darkInactive: "#4E4D4E",
     white: "#f4f3f4",
     gray: "#9FA5AA",
   },

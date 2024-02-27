@@ -17,7 +17,7 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { getChordCurrentTranslation } from '../redux/store'
 import { useTranslation } from "react-i18next";
 
-const screenHeight = Dimensions.get('window').height - 100; // -100 for header
+const screenHeight = Dimensions.get('window').height - 150; // -150 for header
 const ChordFinder = (props) => {
   const { t, i18n } = useTranslation();
   const modes = ["InputMode", "NeckMode"];
@@ -98,7 +98,7 @@ const ChordFinder = (props) => {
             quality={chord.quality}
             tension={chord.tension}
             color="primary"
-            styling={{position:"absolute", bottom: 100, width:"100%" ,justifyContent:"center"}}
+            styling={{position:"absolute", bottom: 0, width:"100%" ,justifyContent:"center", height: "25%"}}
           />
         ) : (
           ""

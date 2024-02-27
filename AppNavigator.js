@@ -101,6 +101,7 @@ function AppNavigator(props) {
                 {
                   display: "flex",
                   borderTopWidth:0,
+                  height:50
                 },
                 null
               ]

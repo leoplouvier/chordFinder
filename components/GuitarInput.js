@@ -175,20 +175,22 @@ const GuitarInput = (props) => {
 };
 export default withAccessToStore(GuitarInput);
 
-const screenHeight = Math.round(Dimensions.get("window").height),
-  styles = StyleSheet.create({
+const height = (Math.round(Dimensions.get("window").height)- 150) * 0.75
+const screenWidth = Math.round(Dimensions.get("window").width)
+const  styles = StyleSheet.create({
     container: {
-      width: Dimensions.get('screen').width,
-      height: Dimensions.get('screen').height,
+      width: screenWidth,
+      height: "75%",
       backgroundColor: theme.color.background,
       color: "#fff",
       alignItems: "center",
+      justifyContent:"flex-end"
     },
     background: {
-      width: "45%",
-      height: 0.6 * screenHeight,
+      height: height - 50,
+      width:"50%",
       position: "absolute",
-      top: -10,
+      top: 0,
       zIndex:100
     },
     caseInput: {
@@ -218,8 +220,7 @@ const screenHeight = Math.round(Dimensions.get("window").height),
     caseMid: { top: 190 },
     caseBottom: { top: 290 },
     bottomActions: {
-      marginTop: 520,
-      alignItems: "center",
+      height: 50
     },
     clearButton: {
       position: "absolute",

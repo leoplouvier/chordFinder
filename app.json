@@ -2,7 +2,7 @@
   "expo": {
     "name": "chordFinder",
     "slug": "chordFinder",
-    "version": "1.0.0",
+    "version": "1.1.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -14,7 +14,9 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["assets/images/*"],
+    "assetBundlePatterns": [
+      "assets/images/*"
+    ],
     "ios": {
       "supportsTablet": true
     },
@@ -27,7 +29,13 @@
     },
     "android": {
       "package": "com.leoplv.chordFinder",
-      "permissions": []
+      "permissions": [],
+      "versionCode":3
+    },
+    "extra": {
+      "eas": {
+        "projectId": "f9ffdcd6-125f-46fa-8b34-f8f8ee40be07"
+      }
     }
   }
 }

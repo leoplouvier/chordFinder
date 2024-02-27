@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { ScrollView, Image, View, Dimensions } from "react-native";
+import { ScrollView, Image, View, Dimensions,TouchableOpacity } from "react-native";
 import { Button, Text } from "galio-framework";
 import { theme } from "../utils/styleUtils";
 import { changeChord, withAccessToStore } from "../redux/store";
 import { getChordWithPosition } from "../services/httpService";
 import { useTranslation } from "react-i18next";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 
 const GuitarNeck = (props) => {
   const { t, i18n } = useTranslation();
@@ -43,11 +44,11 @@ const GuitarNeck = (props) => {
         ...props.style,
         justifyContent: "center",
         alignItems: "center",
-        height: Dimensions.get('screen').height - 450,
+        height: Dimensions.get('window').height - 150 - 70 -150, //-150 for header -70 for margin -150 for buttons
         marginTop:70
       }}
     >
-      <ScrollView style={{ width: Dimensions.get('screen').width }}>
+      <ScrollView style={{ width: Dimensions.get('window').width }}>
         <Image
           source={neck}
           style={{
@@ -63,28 +64,27 @@ const GuitarNeck = (props) => {
             width: "70%",
             left: "15%",
             top: 5,
-            paddingLeft: 18,
-            paddingRight: 18,
           }}
         >
           {neckCases.map((c, index) => {
             return (
-              <View
-                key={index + "emptyString"}
-                style={{
-                  height: [0, 5].includes(index)
-                    ? 1960
-                    : [1, 4].includes(index)
-                    ? 1965
-                    : 1975,
-                  width: 10 - index,
-                  minWidth: 7,
-                  backgroundColor:
-                    c === "X" ? theme.color.inactive : theme.color.primary,
-                  marginRight: 41 + index,
-                  opacity: ["0", 0, "X"].includes(c) ? 1 : 0,
-                }}
-              ></View>
+              <View key={index + "emptyStringContainer"} style={{width:Dimensions.get('window').width*0.7 /6, justifyContent:"flex-start",alignItems: "center"}}>
+                <View
+                  key={index + "emptyString"}
+                  style={{
+                    height: [0, 5].includes(index)
+                      ? 1960
+                      : [1, 4].includes(index)
+                      ? 1965
+                      : 1975,
+                    width: 11 - index,
+                    minWidth: 7,
+                    backgroundColor:
+                      c === "X" ? theme.color.inactive : theme.color.primary,
+                    opacity: ["0", 0, "X"].includes(c) ? 1 : 0,
+                  }}
+                ></View>
+              </View>
             );
           })}
         </View>
@@ -94,7 +94,7 @@ const GuitarNeck = (props) => {
             flexDirection: "row",
             width: "70%",
             left: "15%",
-            top: 40,
+            top: 40
           }}
         >
           {cases.map((c, index) => {
@@ -107,9 +107,11 @@ const GuitarNeck = (props) => {
                       color="transparent"
                       shadowless
                       style={{
-                        width: 50,
+                        width: Dimensions.get('window').width*0.7 /6,
                         height: getCasesHeight(i),
                         margin: 0,
+                        justifyContent:"center",
+                        alignItems:"center"
                       }}
                       onPress={() => {
                         let oldNeckState = [...neckCases];
@@ -158,50 +160,56 @@ const GuitarNeck = (props) => {
         </View>
       </ScrollView>
       <View
-        style={{ position: "absolute", bottom: -143, alignItems: "center" }}
+        style={{ position: "absolute", bottom: -150, alignItems: "center", height:150 }}
       >
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row",width:0.7*Dimensions.get('window').width,height:70,alignItems:"center",justifyContent:"center" }}>
           {neckCases.map((c, index) => {
             return (
               <View key={index + "action"}>
-                <Button
-                  color={
-                    ["0", 0].includes(c)
-                      ? theme.color.primary
-                      : theme.color.darkPrimary
-                  }
-                  style={{
-                    width: 30,
-                    height: 35,
-                    marginTop: 0,
-                    marginBottom: 2,
-                  }}
+                <TouchableOpacity 
                   onPress={() => {
                     let newNeckState = [...neckCases];
                     newNeckState[index] = "0";
                     changeNeck(newNeckState);
                   }}
-                >
-                  0
-                </Button>
-                <Button
-                  color={
-                    c === "X" ? theme.color.inactive : theme.color.darkInactive
-                  }
                   style={{
-                    width: 30,
-                    height: 35,
-                    marginTop: 0,
-                    marginBottom: 0,
-                  }}
+                    width: 0.7*Dimensions.get('window').width/6,
+                    height: "50%",
+                    justifyContent:"center",
+                    alignItems:"center"
+                  }}>
+                  <FontAwesome5 
+                  name="circle" 
+                  size={20} 
+                  color={
+                    ["0", 0].includes(c)
+                      ? theme.color.primary
+                      : theme.color.darkPrimary
+                  } 
+                  solid={["0", 0].includes(c)} 
+                 />
+                </TouchableOpacity >
+                <TouchableOpacity 
                   onPress={() => {
                     let newNeckState = [...neckCases];
                     newNeckState[index] = "X";
                     changeNeck(newNeckState);
                   }}
-                >
-                  X
-                </Button>
+                  style={{
+                    width: 0.7*Dimensions.get('window').width/6,
+                    height: "50%",
+                    justifyContent:"center",
+                    alignItems:"center"
+                  }}>
+                  <FontAwesome5 
+                  name="ban" 
+                  size={20} 
+                  color={
+                    c === "X" ? theme.color.inactive : theme.color.darkInactive
+                  }
+                  regular 
+                 />
+                </TouchableOpacity >
               </View>
             );
           })}
@@ -209,7 +217,7 @@ const GuitarNeck = (props) => {
         <Button
           color={theme.color.primary}
           onPress={findChord}
-          style={{ marginTop: 20 }}
+          style={{ height: 50,marginTop:20}}
           disabled={neckCases.join("") == "XXXXXX"}
           loading={loading}
           loadingColor={theme.color.background}
