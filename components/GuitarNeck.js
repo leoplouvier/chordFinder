@@ -17,6 +17,7 @@ const GuitarNeck = (props) => {
   const neck = require(".././assets/guitarNeck.png")
   const help = [1, 3, 5, 7, 9, 12, 15, 17, 19, 21]
   const cases = new Array(6).fill(new Array(22).fill(0))
+  const windowHeight = Dimensions.get('window').height
   
   const findChord = async () => {
     setLoading(true);
@@ -160,9 +161,9 @@ const GuitarNeck = (props) => {
         </View>
       </ScrollView>
       <View
-        style={{ position: "absolute", bottom: -150, alignItems: "center", height:150 }}
+        style={{ position: "absolute", bottom: -150, alignItems: "center", height:150}}
       >
-        <View style={{ flexDirection: "row",width:0.7*Dimensions.get('window').width,height:70,alignItems:"center",justifyContent:"center" }}>
+        <View style={{ flexDirection: "row",width:0.7*Dimensions.get('window').width,height:windowHeight > 700 ? 70 : 50,alignItems:"center",justifyContent:"center" }}>
           {neckCases.map((c, index) => {
             return (
               <View key={index + "action"}>
@@ -180,7 +181,7 @@ const GuitarNeck = (props) => {
                   }}>
                   <FontAwesome5 
                   name="circle" 
-                  size={20} 
+                  size={windowHeight > 700 ? 20 : 17} 
                   color={
                     ["0", 0].includes(c)
                       ? theme.color.primary
@@ -203,7 +204,7 @@ const GuitarNeck = (props) => {
                   }}>
                   <FontAwesome5 
                   name="ban" 
-                  size={20} 
+                  size={windowHeight > 700 ? 20 : 17} 
                   color={
                     c === "X" ? theme.color.inactive : theme.color.darkInactive
                   }
@@ -217,7 +218,7 @@ const GuitarNeck = (props) => {
         <Button
           color={theme.color.primary}
           onPress={findChord}
-          style={{ height: 50,marginTop:20}}
+          style={{ height: windowHeight > 700 ? 50 : 40,marginTop:20}}
           disabled={neckCases.join("") == "XXXXXX"}
           loading={loading}
           loadingColor={theme.color.background}

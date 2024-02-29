@@ -1,5 +1,5 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Dimensions } from "react-native";
 import { Text } from "galio-framework";
 import { guitarStrings } from "../utils/guitarUtils";
 import { getChordCurrentTranslation } from "../redux/store";
@@ -62,11 +62,7 @@ export default function PlaySchema(props) {
                     <View>
                       <Text
                         h4
-                        style={{
-                          marginLeft: -37,
-                          marginTop: -25,
-                          color: "#fff",
-                        }}
+                        style={styles.xPosition}
                       >
                         X
                       </Text>
@@ -102,7 +98,7 @@ export default function PlaySchema(props) {
       <View style={styles.stringNames}>
         {guitarStrings.map((string, i) => {
           return (
-            <Text key={i} muted style={{ marginBottom: 21 }}>
+            <Text key={i} muted style={styles.stringNameText}>
               {getChordCurrentTranslation(string)}
             </Text>
           );
@@ -111,34 +107,40 @@ export default function PlaySchema(props) {
     </View>
   );
 }
-
+const windowHeight = Dimensions.get('window').height
+const schemaWidth = windowHeight < 650 ? 250 : 280
 const styles = StyleSheet.create({
   stringContainer: {
-    width: 280,
+    width: schemaWidth,
     alignItems: "center",
     marginLeft: 50,
   },
   stringSchema: {
-    width: 280,
-    height: 40,
+    width: schemaWidth,
+    height:  windowHeight < 650 ? 30 : 40,
     borderLeftWidth: 8,
     borderColor: "#fff",
     marginBottom: 0,
     flexDirection: "row",
   },
   positionSchema: {
-    width: 55,
+    width: schemaWidth/5 - 1,
     height: "100%",
     borderWidth: 1,
     borderColor: "#fff",
   },
   position: {
-    width: 25,
-    height: 25,
+    width: windowHeight < 650 ? 20 : 25,
+    height: windowHeight < 650 ? 20 : 25,
     borderRadius: 25,
     backgroundColor: "#fff",
-    marginLeft: -40,
-    marginTop: -12,
+    marginLeft: windowHeight < 650 ? -35 : -40,
+    marginTop: windowHeight < 650 ? -10 : -12,
+  },
+  xPosition:{
+    marginLeft: windowHeight < 650 ? -30 : -37,
+    marginTop: windowHeight < 650 ? -20 : -25,
+    color: "#fff",
   },
   beginning: {
     position: "absolute",
@@ -157,4 +159,7 @@ const styles = StyleSheet.create({
     width: 100,
     height: "100%",
   },
+  stringNameText: {
+    marginBottom: windowHeight < 650 ? 11 : 21 
+  }
 });

@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Dimensions } from "react-native";
 import { chordTranslation, quality, alteration } from "../utils/guitarUtils";
 import { theme } from "../utils/styleUtils";
 import { Button } from "galio-framework";
@@ -44,73 +44,75 @@ const ChordPosition = (props) => {
       : props.state.translation.translationArray;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.ButtonContainer}>
-        {chordArray.map((chord, i) => {
-          return (
-            <SelectableButton
-              key={i}
-              isSelected={
-                 selectedChord ===
-                  props.state.translation.translationArray.findIndex(
+    <View style={styles.screenContainer}>
+      <View style={styles.actions}>
+        <View style={styles.ButtonContainer}>
+          {chordArray.map((chord, i) => {
+            return (
+              <SelectableButton
+                key={i}
+                isSelected={
+                  selectedChord ===
+                    props.state.translation.translationArray.findIndex(
+                      (translatedChord) => translatedChord === chord
+                    )
+                }
+                textString={chord}
+                byLine={i>3 ? 3 : 4}
+                onPress={() => {
+                  let chordValue = props.state.translation.translationArray.findIndex(
                     (translatedChord) => translatedChord === chord
-                  )
-              }
-              textString={chord}
-              byLine={i>3 ? 3 : 4}
-              onPress={() => {
-                let chordValue = props.state.translation.translationArray.findIndex(
-                  (translatedChord) => translatedChord === chord
-                );
-                changeChord(chordValue);
-                disableSharp(["E", "B"].includes(chord) ? true : false);
-                disableFlat(["F", "C"].includes(chord) ? true : false);
-                changeAlteration("");
-              }}
-            />
-          );
-        })}
+                  );
+                  changeChord(chordValue);
+                  disableSharp(["E", "B"].includes(chord) ? true : false);
+                  disableFlat(["F", "C"].includes(chord) ? true : false);
+                  changeAlteration("");
+                }}
+              />
+            );
+          })}
+        </View>
+        <View style={styles.ButtonContainer}>
+          {alteration.map((a) => {
+            return (
+              <SelectableButton
+                byLine={3}
+                key={a}
+                isSelected={selectedAlteration === a}
+                textString={!a ? "--" : a}
+                onPress={() => changeAlteration(a)}
+                disabled={
+                  a === "#" ? cantBeSharp : a === "b" ? cantBeFlat : false
+                }
+              />
+            );
+          })}
+        </View>
+        <View style={styles.ButtonContainer}>
+          {quality.map((q) => {
+            return (
+              <SelectableButton
+                key={q}
+                byLine={2}
+                isSelected={!selectedQuality || selectedQuality === q}
+                textString={q}
+                onPress={() => changeQuality(q)}
+              />
+            );
+          })}
+        </View>
+        <Button
+          disabled={selectedChord === ""}
+          style={selectedChord === "" ? {...styles.searchButton, ...styles.searchDisabled} : styles.searchButton}
+          loading={isLoading}
+          loadingColor={theme.color.primary}
+          onPress={searchForChords}
+          shadowColor={theme.color.primary}
+        >
+          <Text style={{color:selectedChord === "" ? theme.color.darkInactive : theme.color.primary}}>{t("HOW_TO_PLAY")}</Text>
+          <FontAwesome5 name="search" size={15} color={selectedChord === "" ? theme.color.darkInactive : theme.color.primary}/>
+        </Button>
       </View>
-      <View style={styles.ButtonContainer}>
-        {alteration.map((a) => {
-          return (
-            <SelectableButton
-              byLine={3}
-              key={a}
-              isSelected={selectedAlteration === a}
-              textString={!a ? "--" : a}
-              onPress={() => changeAlteration(a)}
-              disabled={
-                a === "#" ? cantBeSharp : a === "b" ? cantBeFlat : false
-              }
-            />
-          );
-        })}
-      </View>
-      <View style={styles.ButtonContainer}>
-        {quality.map((q) => {
-          return (
-            <SelectableButton
-              key={q}
-              byLine={2}
-              isSelected={!selectedQuality || selectedQuality === q}
-              textString={q}
-              onPress={() => changeQuality(q)}
-            />
-          );
-        })}
-      </View>
-      {selectedChord !== ""  &&<Button
-        disabled={selectedChord === ""}
-        style={styles.searchButton}
-        loading={isLoading}
-        loadingColor={theme.color.primary}
-        onPress={searchForChords}
-        shadowColor={theme.color.primary}
-      >
-        <Text style={{color:theme.color.primary}}>{t("HOW_TO_PLAY")}</Text>
-         <FontAwesome5 name="search" size={15} color={theme.color.primary} style={{marginLeft: 10}}/>
-      </Button>}
       {chordResult.length > 0 && (
         <Swiper
           containerStyle={styles.swiperContainer}
@@ -139,27 +141,39 @@ const ChordPosition = (props) => {
 export default withAccessToStore(ChordPosition);
 
 const styles = StyleSheet.create({
-  container: {
+  screenContainer: {
     backgroundColor: theme.color.background,
     height: "100%",
-    alignItems:"center"
+    alignItems:"center",
   },
-  ButtonContainer: { flexDirection: "row", flexWrap: "wrap", marginBottom: 45 },
+  actions:{
+    justifyContent:"space-between",
+    alignItems:"center",
+    height:"40%"
+  },
+  ButtonContainer: { flexDirection: "row", flexWrap: "wrap"},
   searchButton: { 
-    width: "80%", 
     flexDirection:"row",
+    display:"flex",
     backgroundColor:theme.color.background,
     borderColor:theme.color.primary,
-    borderWidth:1 
+    borderWidth:1,
+    alignItems:"center",
+    justifyContent:"center",
+    gap: 10,
+  },
+  searchDisabled:{
+    borderColor:theme.color.darkInactive,
   },
   swiperContainer: {
     width: "100%",
-    height: 360,
+    height: "60%",
     position: "absolute",
-    top: "49%",
+    top: "40%",
   },
   swiperViewContainer: {
     alignItems: "center",
     flex: 1,
+    justifyContent:Dimensions.get('window').height > 700 ? "center" : "flex-start",
   },
 });

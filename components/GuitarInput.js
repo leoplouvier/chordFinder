@@ -175,8 +175,11 @@ const GuitarInput = (props) => {
 };
 export default withAccessToStore(GuitarInput);
 
-const height = (Math.round(Dimensions.get("window").height)- 150) * 0.75
+const ContainerHeight = (Math.round(Dimensions.get("window").height)- 150) * 0.75 - 50
 const screenWidth = Math.round(Dimensions.get("window").width)
+const imgHeight = 3300
+const imgWidth = 1370
+const widthRatio = imgWidth/imgHeight 
 const  styles = StyleSheet.create({
     container: {
       width: screenWidth,
@@ -187,8 +190,8 @@ const  styles = StyleSheet.create({
       justifyContent:"flex-end"
     },
     background: {
-      height: height - 50,
-      width:"50%",
+      height: ContainerHeight,
+      width: ContainerHeight*widthRatio,
       position: "absolute",
       top: 0,
       zIndex:100
